@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import Mainfooter from "./Mainfooter";
+import Mainheader from "./Mainheader"
 import {
   InfoContainer,
   InfoWrapper,
@@ -54,7 +56,7 @@ import {
   SidebarLinksignup,
   SidebarWrapper,
   SidebarRoute,
-  SidebarMenu
+  SidebarMenu,
 } from "./InfoElements";
 import { Button } from "../ButtonElement";
 import Icon1 from "../../images/svg-4.svg";
@@ -65,6 +67,7 @@ import Video from "../../video/video.mp4";
 
 import { useEffect } from "react";
 import { FaBars } from "react-icons/fa";
+
 
 /*Navbar ka js */
 const Navbar = ({ toggle }) => {
@@ -86,63 +89,7 @@ const Navbar = ({ toggle }) => {
 
   return (
     <>
-      <Nav scrollNav={scrollNav}>
-        <NavbarContainer>
-          <NavLogo to="/" onClick={toggleHome}>
-            EatUp
-          </NavLogo>
-          <MobileIcon onClick={toggle}>
-            <FaBars />
-          </MobileIcon>
-          <NavMenu>
-            <NavItem>
-              <NavLinks
-                to="about"
-                smooth={true}
-                duration={500}
-                spy={true}
-                exact="true"
-                offset={-80}
-                activeClass="active"
-              >
-                About
-              </NavLinks>
-            </NavItem>
-            <NavItem>
-              <NavLinks
-                to="discover"
-                smooth={true}
-                duration={500}
-                spy={true}
-                exact="true"
-                offset={-80}
-                activeClass="active"
-              >
-                Discover
-              </NavLinks>
-            </NavItem>
-            <NavItem>
-              <NavLinks
-                to="services"
-                smooth={true}
-                duration={500}
-                spy={true}
-                exact="true"
-                offset={-80}
-                activeClass="active"
-              >
-                Services
-              </NavLinks>
-            </NavItem>
-            <NavItem>
-              <NavBtnLinksignup to="/signup">Sign Up</NavBtnLinksignup>
-            </NavItem>
-          </NavMenu>
-          <NavBtn>
-            <NavBtnLink to="/signin">Sign In</NavBtnLink>
-          </NavBtn>
-        </NavbarContainer>
-      </Nav>
+      <Mainheader />
     </>
   );
 };
@@ -220,7 +167,7 @@ const InfoSection = ({
   alt,
   primary,
   dark,
-  dark2
+  dark2,
 }) => {
   return (
     <>
@@ -298,36 +245,7 @@ const Footer = () => {
   const toggleHome = () => {
     scroll.scrollToTop();
   };
-  return (
-    <FooterContainer>
-      <FooterWrap>
-        <FooterLinkTitle to="/" onClick={toggleHome}>
-          EatUp
-        </FooterLinkTitle>
-        <FooterLinkSubtitle>
-          Get tools that grow your business
-        </FooterLinkSubtitle>
-        <FooterLinksContainer>
-          <FooterLinkItems>
-            <FooterLink to="/termsandconditions">Terms &#38; Conditions</FooterLink>
-          </FooterLinkItems>
-
-          <FooterLinkItems>
-            <FooterLink to="/privacypolicy">Privacy Policy</FooterLink>
-          </FooterLinkItems>
-
-          <FooterLinkItems>
-            <FooterLink to="/contactus">Conatct Us</FooterLink>
-          </FooterLinkItems>
-        </FooterLinksContainer>
-        <FooterCopyRight>
-          {" "}
-          &copy; EatUp {new Date().getFullYear()}
-          &nbsp;All rights reserved.
-        </FooterCopyRight>
-      </FooterWrap>
-    </FooterContainer>
-  );
+  return <Mainfooter />;
 };
 
 export { Navbar, Sidebar, Banner, InfoSection, Services, Footer };
