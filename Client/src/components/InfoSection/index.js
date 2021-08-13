@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import SearchBar from "./SearchBar.js";
 import {
   InfoContainer,
   InfoWrapper,
@@ -189,17 +190,7 @@ const Banner = () => {
       <BannerContent>
         <BannerH1>ASDFGHJK</BannerH1>
         <BannerP>1234567</BannerP>
-
-        <BannerBtnWrapper>
-          <Button
-            onMouseEnter={onHover}
-            onMouseLeave={onHover}
-            primary="true"
-            dark="true "
-          >
-            Yaha Search Bar Aaega {hover ? <Search /> : <ArrowRight />}
-          </Button>
-        </BannerBtnWrapper>
+        <SearchBar/>
       </BannerContent>
     </BannerContainer>
   );
