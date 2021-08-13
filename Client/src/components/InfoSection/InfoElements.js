@@ -4,6 +4,44 @@ import { Link as LinkS} from 'react-scroll';
 import {MdKeyboardArrowRight, MdArrowForward} from 'react-icons/md'
 import {FaTimes} from 'react-icons/fa';
 
+
+
+export const Header= styled.nav`
+    background: #000;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    font-size: 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    margin-top: -80px;
+
+    @media screen and (max-width: 960px){
+        transition: 0.8s all ease;
+    }
+`;
+export const HeaderContainer = styled.nav`
+    display: flex;
+    justify-content: space-between;
+    height: 80px;
+    width:100%;
+    position: sticky;
+    max-width:1100px;
+    z-index: 1;
+    padding: 0 24px;
+`;
+export const HeaderLogo = styled(LinkR)`
+    color: #fff;
+    justify-self: flex-start;
+    cursor: pointer;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    margin-left: 24px;
+    font-weight: bold;
+    text-decoration:none;
+`;
 /*Navbar ka css*/
 export const Nav = styled.nav`
     /*background: ${({scrollNav}) => (scrollNav ? '#000': 'transparent')};*/
