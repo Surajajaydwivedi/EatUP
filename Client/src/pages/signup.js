@@ -19,11 +19,13 @@ import Container from "@material-ui/core/Container";
 import { InputAdornment, IconButton } from "@material-ui/core";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
 import MuiPhoneNumber from "material-ui-phone-number";
 import { red } from "@material-ui/core/colors";
 import Mainfooter from "../components/InfoSection/Mainfooter";
 import Mainheader from "../components/InfoSection/Mainheader";
-
+import QR from "../components/qr";
 const axios = require("axios");
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -64,21 +66,24 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 var key = "";
-const random = (length = 9) => {
-  let chars = "abcdefghijklmnopqrstuvwxyz";
-  let tempstr = "";
-  for (let i = 0; i < length; i++) {
-    tempstr += chars.charAt(Math.floor(Math.random() * chars.length));
+
+let chars = "abcdefghijklmnopqrstuvwxyz";
+let tempstr = "";
+for (let i = 0; i < 9; i++) {
+  tempstr += chars.charAt(Math.floor(Math.random() * chars.length));
+}
+var str = "";
+for (let i = 0; i < tempstr.length; i++) {
+  str += tempstr[i];
+  if ((i + 1) % 3 === 0 && i !== tempstr.length - 1) {
+    str += "-";
   }
-  var str = "";
-  for (let i = 0; i < tempstr.length; i++) {
-    str += tempstr[i];
-    if ((i + 1) % 3 === 0 && i != tempstr.length - 1) {
-      str += "-";
-    }
-  }
-  key = str;
-};
+}
+key = str;
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 function getSteps() {
   return ["Personal Info", "Store Info", "Get Your QR"];
@@ -88,28 +93,49 @@ export default function HorizontalLinearStepper() {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
+  const [open, setOpen] = React.useState(false);
+  const [openerr, setOpenerr] = React.useState(false);
+
   const [ph, updateph] = useState(0);
   const [password, updatepassword] = useState("");
   const [samepass, updatesamepass] = useState(false);
   const [emailid, updateemailid] = useState("");
+  const [image, updateimage] = useState("");
+  const [name, updatename] = useState("");
+  const [address, updateaddress] = useState("");
+  const [city, updatecity] = useState("");
+  const [errormsg, updateerrmsg] = useState("Something's Wrong");
 
+  function handlechangename() {
+    var x = document.getElementById("name").value;
+    updatename(x);
+  }
+  function handlechangecity() {
+    var x = document.getElementById("city").value;
+    updatecity(x);
+    updateaddress(address + x);
+  }
+  function handlechangeaddress() {
+    var x = document.getElementById("address").value;
+    updateaddress(x);
+  }
+  function handlechangestate() {
+    var x = document.getElementById("state").value;
+    updateaddress(address + x);
+  }
+  function handlechangepincode() {
+    var x = document.getElementById("pincode").value;
+    updateaddress(address + x);
+  }
   function handlephchange(value) {
     if (value) {
       updateph(value);
     }
   }
-  async function emailexist() {
-    const resp = await axios.post("http://localhost:5000/check", {
-      email: emailid,
-    });
-    return resp.data.ans;
-  }
-
   function handlepasschange() {
     var x = document.getElementById("password").value;
     updatepassword(x);
   }
-
   function handleconfirmchange() {
     var x = document.getElementById("c-password").value;
     if (x.length > 0) {
@@ -125,7 +151,6 @@ export default function HorizontalLinearStepper() {
       updatesamepass(false);
     }
   }
-
   function handleemailchange() {
     document.getElementById("wrongemail").style = "visibility:hidden";
 
@@ -141,8 +166,70 @@ export default function HorizontalLinearStepper() {
     updateemailid(x);
   }
 
-  function insertdata(data) {
-    axios.post("http://localhost:5000/insert", data);
+  const handleClick = () => {
+    setOpen(true);
+  };
+  const handleClickerr = () => {
+    setOpenerr(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
+  const handleCloseerr = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenerr(false);
+  };
+
+  async function emailexist() {
+    const resp = await axios.post("http://localhost:5000/check", {
+      email: emailid,
+    });
+    return resp.data.ans;
+  }
+
+  function insertdata() {
+    var tempdata = {
+      key: key,
+      email: emailid,
+      password: password,
+      name: name,
+      phno: ph,
+      address: address,
+      city: city,
+      logo: "hmmm",
+      items: [],
+    };
+    axios.post("http://localhost:5000/signup", tempdata);
+  }
+
+  async function allgood() {
+    if (password === "") {
+      updateerrmsg("Password can't be empty !");
+      handleClickerr();
+      return false;
+    } else if (!samepass) {
+      updateerrmsg("Password and confirm passwords do not match.");
+      handleClickerr();
+      return false;
+    } else if (ph.split(" ")[1].length < 11) {
+      updateerrmsg("Phone Number can't be empty !");
+      handleClickerr();
+      return false;
+    } else if (!(await emailexist())) {
+      updateerrmsg("Email you entered already exists.");
+      handleClickerr();
+      return false;
+    }
+    handleClick();
+    return true;
   }
 
   const steps = getSteps();
@@ -170,7 +257,6 @@ export default function HorizontalLinearStepper() {
                       label="Email Address"
                       onChange={handleemailchange}
                       name="email"
-                      autoComplete="email"
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -194,7 +280,6 @@ export default function HorizontalLinearStepper() {
                       type="password"
                       id="password"
                       onChange={handlepasschange}
-                      autoComplete="current-password"
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -207,7 +292,6 @@ export default function HorizontalLinearStepper() {
                       type="password"
                       id="c-password"
                       onChange={handleconfirmchange}
-                      autoComplete="current-password"
                     />
                     <div className={classes.passwordmatch} id="wrongemail">
                       Invalid Email.
@@ -241,80 +325,101 @@ export default function HorizontalLinearStepper() {
               <Typography component="h1" variant="h5">
                 Store Details
               </Typography>
-              <form className={classes.form} noValidate>
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <TextField
-                      id="outlined-basic"
-                      label="Store Name"
-                      variant="outlined"
-                      fullWidth
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      id="outlined-basic"
-                      label="Address"
-                      variant="outlined"
-                      placeholder="Street Name/ Plot No."
-                      fullWidth
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={4}>
-                    <TextField
-                      id="outlined-basic"
-                      label="City"
-                      variant="outlined"
-                      fullWidth
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={4}>
-                    <TextField
-                      id="outlined-basic"
-                      label="State"
-                      variant="outlined"
-                      fullWidth
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={4}>
-                    <TextField
-                      id="outlined-basic"
-                      label="Pincode"
-                      variant="outlined"
-                      type="number"
-                      fullWidth
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Button variant="contained" component="label" fullWidth>
-                      Upload Logo*
-                      <input
-                        type="file"
-                        accept="image/*"
-                        hidden
-                        required
-                        id="uploadBox"
-                      />
-                    </Button>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Button variant="contained" component="label" fullWidth>
-                      Upload Store image (Optional)
-                      <input type="file" accept="image/*" hidden required />
-                    </Button>
-                  </Grid>
+
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField
+                    id="name"
+                    label="Store Name"
+                    variant="outlined"
+                    placeholder="Cosmos Cafe"
+                    autoComplete="off"
+                    onChange={() => {
+                      handlechangename();
+                    }}
+                    fullWidth
+                    required
+                  />
                 </Grid>
-              </form>
+                <Grid item xs={12}>
+                  <TextField
+                    id="address"
+                    label="Address"
+                    variant="outlined"
+                    placeholder="Street Name/ Plot No."
+                    autoComplete="off"
+                    onChange={() => {
+                      handlechangeaddress();
+                    }}
+                    fullWidth
+                    required
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
+                    id="city"
+                    label="City"
+                    placeholder="Noida"
+                    variant="outlined"
+                    autoComplete="off"
+                    onChange={() => {
+                      handlechangecity();
+                    }}
+                    fullWidth
+                    required
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
+                    id="state"
+                    label="State"
+                    variant="outlined"
+                    placeholder="UP"
+                    autoComplete="off"
+                    onChange={() => {
+                      handlechangestate();
+                    }}
+                    fullWidth
+                    required
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
+                    id="pincode"
+                    label="Pincode"
+                    variant="outlined"
+                    type="number"
+                    onChange={() => {
+                      handlechangepincode();
+                    }}
+                    fullWidth
+                    required
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Button variant="contained" component="label" fullWidth>
+                    Upload Logo*
+                    <input
+                      type="file"
+                      accept="image/*"
+                      hidden
+                      required
+                      id="uploadBox"
+                    />
+                  </Button>
+                </Grid>
+                <Grid item xs={12}>
+                  <Button variant="contained" component="label" fullWidth>
+                    Upload Store image (Optional)
+                    <input type="file" accept="image/*" hidden required />
+                  </Button>
+                </Grid>
+              </Grid>
             </div>
           </Container>
         );
       case 2:
-        return <>Here is Your QR</>;
+        return <QR keyy={key} />;
       default:
         return "Get Your QR";
     }
@@ -337,20 +442,18 @@ export default function HorizontalLinearStepper() {
 
   async function handleNext(value) {
     if (value === 0) {
-      var emailexists = 1; /*await emailexist(); */
-      console.log(emailexists);
-      if (samepass !== true || emailexists === false) {
-        alert("Email You Entered Already Exists.");
+      var ret = await allgood();
+      if (ret === false) {
+        return;
       }
     } else if (value === 1) {
       if (document.getElementById("uploadBox").value === "") {
         alert("Please upload store's logo");
-        return;
       }
     } else if (value === 2) {
-      random();
+      insertdata();
+      handleClick();
     }
-
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
       newSkipped = new Set(newSkipped.values());
@@ -427,6 +530,17 @@ export default function HorizontalLinearStepper() {
           )}
         </div>
       </div>
+
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success">
+          Details Saved !
+        </Alert>
+      </Snackbar>
+      <Snackbar open={openerr} autoHideDuration={6000} onClose={handleCloseerr}>
+        <Alert onClose={handleCloseerr} severity="error">
+          {errormsg}
+        </Alert>
+      </Snackbar>
       <Mainfooter />
     </>
   );

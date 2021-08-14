@@ -49,7 +49,10 @@ db.once("open", function (callback) {
 app.post("/check", async function (req, res) {
   var obj = req.body;
 
-  var xx = await db.collection("Store Credentials").find({ email: obj.email }).count();
+  var xx = await db
+    .collection("Store Credentials")
+    .find({ email: obj.email })
+    .count();
   if (xx > 0) {
     res.json({
       ans: false,
@@ -61,20 +64,45 @@ app.post("/check", async function (req, res) {
   }
 });
 
-app.post("/insert", async function (req, res) {
+app.post("/signup", async function (req, res) {
   var obj = req.body;
   insert(obj);
 });
 
 function insert(data) {
-  if (data.type === "1") {
-    const tempdata = {
-      key: random(),
-      email: data.email,
-      password: data.password,
-    };
-    db.collection("Store Credentials").insertOne(tempdata);
-  }
+  var data1 = {
+    key: data.key,
+    name: data.name,
+    phno: data.phno,
+    logo: data.logo,
+    items: data.items,
+  };
+  var data2 = {
+    key: data.key,
+    email: data.email,
+    password: data.password,
+  };
+  var data3 = {
+    key: data.key,
+    email: data.email,
+    password: data.password,
+    name: data.name,
+    phno: data.phno,
+    address: data.address,
+    city: data.city,
+    logo: data.logo,
+    items: data.items,
+  };
+  var data4 = {
+    key: data.key,
+    name: data.name,
+    city: data.city,
+  };
+
+  db.collection("Store Credentials").insertOne(data2);
+  db.collection("UserMenu").insertOne(data1);
+  db.collection("Admin").insertOne(data3);
+  db.collection("Landing").insertOne(data4);
 }
 
 /*"mongodb://eatup:eatupeatup@minor-shard-00-00.1y8bd.mongodb.net:27017,minor-shard-00-01.1y8bd.mongodb.net:27017,minor-shard-00-02.1y8bd.mongodb.net:27017/eatupdb?ssl=true&replicaSet=atlas-qu1lg5-shard-0&authSource=admin&retryWrites=true&w=majority"
