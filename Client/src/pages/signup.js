@@ -47,8 +47,8 @@ const useStyles = makeStyles((theme) => ({
   },
   root: {
     width: "100%",
-    marginTop: "100px",
-    marginBottom: "100px",
+    marginTop: "80px",
+    marginBottom: "330px",
   },
   button: {
     marginRight: theme.spacing(1),
@@ -502,7 +502,7 @@ export default function HorizontalLinearStepper() {
               </Button>
             </div>
           ) : (
-            <div>
+            <div align="center">
               <Typography className={classes.instructions}>
                 {getStepContent(activeStep)}
               </Typography>
@@ -530,7 +530,7 @@ export default function HorizontalLinearStepper() {
           )}
         </div>
       </div>
-
+      <Mainfooter/>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success">
           Details Saved !
@@ -541,7 +541,7 @@ export default function HorizontalLinearStepper() {
           {errormsg}
         </Alert>
       </Snackbar>
-      <Mainfooter />
+      
     </>
   );
 }

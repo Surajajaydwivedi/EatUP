@@ -18,18 +18,7 @@ import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import Mainheader  from '../components/InfoSection/Mainheader';
 import Mainfooter from '../components/InfoSection/Mainfooter'
 
-function App() {
-    return (
-      <Typography variant="body2" color="textSecondary" align="center">
-        {"Copyright © "}
-        <Link color="inherit" href="https://material-ui.com/">
-          EatUP
-        </Link>{" "}
-        {new Date().getFullYear()}
-        {"."}
-      </Typography>
-    );
-  }
+
   
   const useStyles = makeStyles((theme) => ({
     paper: {
@@ -50,8 +39,8 @@ function App() {
       margin: theme.spacing(3, 0, 2),
     },
     fullscr: {
-      marginTop: "150px",
-      marginBottom: "70px",
+      marginTop: "250px",
+      marginBottom: "410px",
     },
   }));
   
@@ -64,7 +53,7 @@ function App() {
     return (
       <>
         <Mainheader/>
-        <Container component="main" maxWidth="xs" className={classes.fullscr}>
+        <Container component="main"  maxWidth="xs" className={classes.fullscr}>
           <CssBaseline />
           <div className={classes.paper}>
             <Avatar className={classes.avatar}>
@@ -136,13 +125,9 @@ function App() {
               </Grid>
             </form>
           </div>
-          <Box mt={8}>
-            
-          </Box>
-        </Container>{" "}
+        </Container>{"  "}
         <Mainfooter />
       </>
     );
   }
   
-

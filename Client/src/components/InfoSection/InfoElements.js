@@ -5,7 +5,6 @@ import {MdKeyboardArrowRight, MdArrowForward} from 'react-icons/md'
 import {FaTimes} from 'react-icons/fa';
 
 
-
 export const Header= styled.nav`
     background: #000;
     height: 80px;
@@ -16,7 +15,7 @@ export const Header= styled.nav`
     top: 0;
     z-index: 10;
     margin-top: -80px;
-    
+
     @media screen and (max-width: 960px){
         transition: 0.8s all ease;
     }
@@ -42,6 +41,7 @@ export const HeaderLogo = styled(LinkR)`
     font-weight: bold;
     text-decoration:none;
 `;
+
 /*Navbar ka css*/
 export const Nav = styled.nav`
     /*background: ${({scrollNav}) => (scrollNav ? '#000': 'transparent')};*/
