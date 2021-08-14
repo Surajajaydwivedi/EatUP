@@ -20,9 +20,7 @@ app.use(
 
 const mongoose = require("mongoose");
 const { SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS } = require("constants");
-mongoose.connect(
-  "mongodb://eatup:eatupeatup@minor-shard-00-00.1y8bd.mongodb.net:27017,minor-shard-00-01.1y8bd.mongodb.net:27017,minor-shard-00-02.1y8bd.mongodb.net:27017/eatupdb?ssl=true&replicaSet=atlas-qu1lg5-shard-0&authSource=admin&retryWrites=true&w=majority"
-);
+mongoose.connect();
 
 const random = (length = 9) => {
   let chars = "abcdefghijklmnopqrstuvwxyz";
@@ -104,6 +102,3 @@ function insert(data) {
   db.collection("Admin").insertOne(data3);
   db.collection("Landing").insertOne(data4);
 }
-
-/*"mongodb://eatup:eatupeatup@minor-shard-00-00.1y8bd.mongodb.net:27017,minor-shard-00-01.1y8bd.mongodb.net:27017,minor-shard-00-02.1y8bd.mongodb.net:27017/eatupdb?ssl=true&replicaSet=atlas-qu1lg5-shard-0&authSource=admin&retryWrites=true&w=majority"
- */
