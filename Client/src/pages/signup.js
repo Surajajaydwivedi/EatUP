@@ -104,7 +104,8 @@ export default function HorizontalLinearStepper() {
   const [name, updatename] = useState("");
   const [address, updateaddress] = useState("");
   const [city, updatecity] = useState("");
-  const [errormsg, updateerrmsg] = useState("Something's Wrong");
+  const [errormsg, updateerrmsg] = useState("Something went wrong");
+  const [successmsg, updatesuccessmsg] = useState("Details Saved !");
 
   function handlechangename() {
     var x = document.getElementById("name").value;
@@ -228,6 +229,7 @@ export default function HorizontalLinearStepper() {
       handleClickerr();
       return false;
     }
+
     handleClick();
     return true;
   }
@@ -451,6 +453,7 @@ export default function HorizontalLinearStepper() {
         alert("Please upload store's logo");
       }
     } else if (value === 2) {
+      updatesuccessmsg("Registered Successfully !");
       insertdata();
       handleClick();
     }
@@ -530,10 +533,10 @@ export default function HorizontalLinearStepper() {
           )}
         </div>
       </div>
-      <Mainfooter/>
+      <Mainfooter />
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success">
-          Details Saved !
+          {successmsg}
         </Alert>
       </Snackbar>
       <Snackbar open={openerr} autoHideDuration={6000} onClose={handleCloseerr}>
@@ -541,7 +544,6 @@ export default function HorizontalLinearStepper() {
           {errormsg}
         </Alert>
       </Snackbar>
-      
     </>
   );
 }
