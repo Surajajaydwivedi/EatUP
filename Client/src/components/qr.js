@@ -17,9 +17,68 @@ import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import Mainheader from "./InfoSection/Mainheader";
 import Mainfooter from "./InfoSection/Mainfooter";
+import ImageList from "@material-ui/core/ImageList";
+import ImageListItem from "@material-ui/core/ImageListItem";
+import GetAppIcon from "@material-ui/icons/GetApp";
+import { useQRCode } from "react-qrcodes";
+import { typography } from "@material-ui/system";
+
+const useStyles = makeStyles((theme) => ({
+  button: {
+    flexGrow: 1,
+    display: "block",
+    marginBottom: "15px",
+  },
+}));
 
 function App(props) {
-  return <>{props.keyy}</>;
+  const classes = useStyles();
+  const [inputRef] = useQRCode({
+    text: "www.gmail.com",
+    options: {
+      type: "image/jpeg",
+      quality: 0.5,
+      level: "M",
+      margin: 3,
+      scale: 4,
+      width: 400,
+      color: {
+        dark: "#3FDE82",
+        light: "#0D1B2A",
+      },
+    },
+  });
+
+  function prepHref() {
+    var url = inputRef.current.currentSrc;
+    var a = document.createElement("a"); //Create <a>
+    a.href = url; //Image Base64 Goes here
+    a.download = "Qr.png"; //File name Here
+    a.click();
+  }
+
+  return (
+    <>
+      <img
+        ref={inputRef}
+        download="myimage"
+        id="qr-img"
+        className={classes.button}
+      />
+
+      <Button
+        variant="contained"
+        color="secondary"
+        display="block"
+        onClick={() => {
+          prepHref();
+        }}
+        startIcon={<GetAppIcon />}
+      >
+        Download
+      </Button>
+    </>
+  );
 }
 
 export default App;

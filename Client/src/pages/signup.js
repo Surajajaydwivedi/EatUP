@@ -52,9 +52,10 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     marginRight: theme.spacing(1),
+    marginTop: "30px",
   },
   instructions: {
-    marginTop: theme.spacing(1),
+    marginTop: "30px",
     marginBottom: theme.spacing(1),
   },
   passwordmatch: {
@@ -96,9 +97,10 @@ export default function HorizontalLinearStepper() {
   const [open, setOpen] = React.useState(false);
   const [openerr, setOpenerr] = React.useState(false);
 
-  const [ph, updateph] = useState(0);
+  const [ph, updateph] = useState(" ");
   const [password, updatepassword] = useState("");
   const [samepass, updatesamepass] = useState(false);
+  const [validemail, updatevalidemail] = useState(false);
   const [emailid, updateemailid] = useState("");
   const [image, updateimage] = useState("");
   const [name, updatename] = useState("");
@@ -160,9 +162,11 @@ export default function HorizontalLinearStepper() {
       document.getElementById("wrongemail").style = "visibility:visible";
     } else {
       document.getElementById("wrongemail").style = "visibility:hidden";
+      updatevalidemail(true);
     }
     if (x.length === 0) {
       document.getElementById("wrongemail").style = "visibility:hidden";
+      updatevalidemail(true);
     }
     updateemailid(x);
   }
@@ -218,6 +222,14 @@ export default function HorizontalLinearStepper() {
       return false;
     } else if (!samepass) {
       updateerrmsg("Password and confirm passwords do not match.");
+      handleClickerr();
+      return false;
+    } else if (password.length < 6) {
+      updateerrmsg("Password too short.");
+      handleClickerr();
+      return false;
+    } else if (validemail === false) {
+      updateerrmsg("Invalid Email.");
       handleClickerr();
       return false;
     } else if (ph.split(" ")[1].length < 11) {
@@ -421,7 +433,12 @@ export default function HorizontalLinearStepper() {
           </Container>
         );
       case 2:
-        return <QR keyy={key} />;
+        return (
+          <>
+            <div id="placeHolder"></div>
+            <QR keyy={key} />{" "}
+          </>
+        );
       default:
         return "Get Your QR";
     }
@@ -438,7 +455,7 @@ export default function HorizontalLinearStepper() {
     } else if (val === 1) {
       return "Submit";
     } else if (val === 2) {
-      return "Finish";
+      return "Register";
     }
   };
 
@@ -498,7 +515,7 @@ export default function HorizontalLinearStepper() {
           {activeStep === steps.length ? (
             <div>
               <Typography className={classes.instructions}>
-                All steps completed - you&apos;re finished
+                Registration completed Successfully.
               </Typography>
               <Button onClick={handleReset} className={classes.button}>
                 Reset
