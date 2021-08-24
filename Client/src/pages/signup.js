@@ -12,6 +12,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import StoreIcon from "@material-ui/icons/Store";
+import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
@@ -20,13 +21,19 @@ import { InputAdornment, IconButton } from "@material-ui/core";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import Snackbar from "@material-ui/core/Snackbar";
+import BackupIcon from "@material-ui/icons/Backup";
 import MuiAlert from "@material-ui/lab/Alert";
 import MuiPhoneNumber from "material-ui-phone-number";
 import { red } from "@material-ui/core/colors";
 import Mainfooter from "../components/InfoSection/Mainfooter";
 import Mainheader from "../components/InfoSection/Mainheader";
 import QR from "../components/qr";
+import ReactS3 from "react-s3";
+import { uploadFile } from "react-s3";
+const crypto = require("crypto");
 const axios = require("axios");
+require("dotenv").config();
+
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -48,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
     marginTop: "80px",
-    marginBottom: "330px",
+    marginBottom: "100px",
   },
   button: {
     marginRight: theme.spacing(1),
@@ -192,6 +199,55 @@ export default function HorizontalLinearStepper() {
 
     setOpenerr(false);
   };
+  function crympto() {
+    var str = "";
+    str = crypto.randomBytes(20).toString("hex");
+    str += ".png";
+    return str;
+  }
+
+  async function sendimgtoaws() {
+    var x = document.getElementById("imglogo");
+    var y = document.getElementById("imgstore");
+    var ret = ["", ""];
+
+    if (typeof x.files[0] !== "undefined") {
+      var file = x.files[0];
+      var blob = file.slice(0, file.size, "image/png");
+      var newFile = new File([blob], crympto(), { type: "image/png" });
+      const config = {
+        bucketName: "restraimagestore",
+        dirName: "logo",
+        region: "us-east-2",
+        accessKeyId: process.env.REACT_APP_AWS_ACCESSKEY,
+        secretAccessKey: process.env.REACT_APP_AWS_SECRETKEY,
+      };
+      await ReactS3.uploadFile(newFile, config)
+        .then((data) => {
+          ret[0] = data.location;
+        })
+        .catch((err) => console.error(err));
+    }
+    if (typeof y.files[0] !== "undefined") {
+      var file = y.files[0];
+      var blob = file.slice(0, file.size, "image/png");
+      var newFile = new File([blob], crympto(), { type: "image/png" });
+      const config = {
+        bucketName: "restraimagestore",
+        dirName: "storeimage",
+        region: "us-east-2",
+        accessKeyId: process.env.REACT_APP_AWS_ACCESSKEY,
+        secretAccessKey: process.env.REACT_APP_AWS_SECRETKEY,
+      };
+      await ReactS3.uploadFile(file, config)
+        .then((data) => {
+          ret[1] = data.location;
+        })
+        .catch((err) => console.error(err));
+    }
+
+    return ret;
+  }
 
   async function emailexist() {
     const resp = await axios.post("http://localhost:5000/check", {
@@ -200,7 +256,9 @@ export default function HorizontalLinearStepper() {
     return resp.data.ans;
   }
 
-  function insertdata() {
+  async function insertdata() {
+    var retval = await sendimgtoaws();
+
     var tempdata = {
       key: key,
       email: emailid,
@@ -209,7 +267,8 @@ export default function HorizontalLinearStepper() {
       phno: ph,
       address: address,
       city: city,
-      logo: "hmmm",
+      logo: retval[0],
+      image: retval[1],
       items: [],
     };
     axios.post("http://localhost:5000/signup", tempdata);
@@ -318,7 +377,7 @@ export default function HorizontalLinearStepper() {
 
                 <Grid container justifyContent="flex-end">
                   <Grid item>
-                    <Link href="#" variant="body2">
+                    <Link href="/signin" variant="body2">
                       Already Registered? Sign in
                     </Link>
                   </Grid>
@@ -412,20 +471,27 @@ export default function HorizontalLinearStepper() {
                 </Grid>
                 <Grid item xs={12}>
                   <Button variant="contained" component="label" fullWidth>
-                    Upload Logo*
+                    Choose Logo*
                     <input
                       type="file"
+                      name="filetoupload"
                       accept="image/*"
                       hidden
                       required
-                      id="uploadBox"
+                      id="imglogo"
                     />
                   </Button>
                 </Grid>
                 <Grid item xs={12}>
                   <Button variant="contained" component="label" fullWidth>
                     Upload Store image (Optional)
-                    <input type="file" accept="image/*" hidden required />
+                    <input
+                      type="file"
+                      accept="image/*"
+                      id="imgstore"
+                      hidden
+                      required
+                    />
                   </Button>
                 </Grid>
               </Grid>
@@ -453,9 +519,9 @@ export default function HorizontalLinearStepper() {
     if (val === 0) {
       return "Check and Procced";
     } else if (val === 1) {
-      return "Submit";
-    } else if (val === 2) {
       return "Register";
+    } else if (val === 2) {
+      return "Signin";
     }
   };
 
@@ -466,13 +532,15 @@ export default function HorizontalLinearStepper() {
         return;
       }
     } else if (value === 1) {
-      if (document.getElementById("uploadBox").value === "") {
+      if (document.getElementById("imglogo").value === "") {
         alert("Please upload store's logo");
+        return;
       }
-    } else if (value === 2) {
       updatesuccessmsg("Registered Successfully !");
       insertdata();
       handleClick();
+    } else if (value === 2) {
+      window.open("/signin", "_self");
     }
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
@@ -528,7 +596,7 @@ export default function HorizontalLinearStepper() {
               </Typography>
               <div>
                 <Button
-                  disabled={activeStep === 0}
+                  disabled={activeStep === 0 || activeStep === 2}
                   onClick={handleBack}
                   className={classes.button}
                 >

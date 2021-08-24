@@ -59,6 +59,8 @@ function App(props) {
 
   return (
     <>
+      <Typography>Registration Was Successful</Typography>
+      <Typography>You can also download your QR later</Typography>
       <img
         ref={inputRef}
         download="myimage"

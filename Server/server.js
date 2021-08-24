@@ -3,6 +3,8 @@ const PORT = 5000;
 const cors = require("cors");
 const app = express();
 var server = require("http").createServer(app);
+var formidable = require("formidable");
+var fs = require("fs");
 
 server.listen(PORT, function () {
   var host = server.address().address;
@@ -20,7 +22,9 @@ app.use(
 
 const mongoose = require("mongoose");
 const { SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS } = require("constants");
-mongoose.connect("mongodb://eatup:eatupeatup@minor-shard-00-00.1y8bd.mongodb.net:27017,minor-shard-00-01.1y8bd.mongodb.net:27017,minor-shard-00-02.1y8bd.mongodb.net:27017/eatupdb?ssl=true&replicaSet=atlas-qu1lg5-shard-0&authSource=admin&retryWrites=true&w=majority");
+mongoose.connect(
+  "mongodb://eatup:eatupeatup@minor-shard-00-00.1y8bd.mongodb.net:27017,minor-shard-00-01.1y8bd.mongodb.net:27017,minor-shard-00-02.1y8bd.mongodb.net:27017/eatupdb?ssl=true&replicaSet=atlas-qu1lg5-shard-0&authSource=admin&retryWrites=true&w=majority"
+);
 
 const random = (length = 9) => {
   let chars = "abcdefghijklmnopqrstuvwxyz";
@@ -73,7 +77,7 @@ function insert(data) {
     name: data.name,
     phno: data.phno,
     logo: data.logo,
-    items: data.items,
+    image: data.image,
   };
   var data2 = {
     key: data.key,
@@ -89,16 +93,21 @@ function insert(data) {
     address: data.address,
     city: data.city,
     logo: data.logo,
-    items: data.items,
+    image: data.image,
   };
   var data4 = {
     key: data.key,
     name: data.name,
     city: data.city,
   };
+  var dataitem = {
+    key: data.key,
+    itmes: data.items,
+  };
 
   db.collection("Store Credentials").insertOne(data2);
   db.collection("UserMenu").insertOne(data1);
   db.collection("Admin").insertOne(data3);
   db.collection("Landing").insertOne(data4);
+  db.collection("Items").insertOne(dataitem);
 }
