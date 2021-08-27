@@ -28,7 +28,7 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import MailIcon from "@material-ui/icons/Mail";
+import Footer from "../components/menufooter"
 
 const drawerWidth = 200;
 const useStyles = makeStyles((theme) => ({
@@ -190,6 +190,7 @@ export default function App(props) {
           </Route>
         </Switch>
       </main>
+      <Footer />
     </div>
   );
 }
