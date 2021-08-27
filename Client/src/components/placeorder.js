@@ -41,7 +41,15 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
 import { Container, Grid, Card, CardContent, Box } from "@material-ui/core";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Paper from "@material-ui/core/Paper";
 import { func } from "prop-types";
+import data from "../pages/data";
 
 const QontoConnector = withStyles({
   alternativeLabel: {
@@ -166,6 +174,23 @@ ColorlibStepIcon.propTypes = {
   completed: PropTypes.bool,
   icon: PropTypes.node,
 };
+const StyledTableCell = withStyles((theme) => ({
+  head: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+  },
+  body: {
+    fontSize: 14,
+  },
+}))(TableCell);
+
+const StyledTableRow = withStyles((theme) => ({
+  root: {
+    "&:nth-of-type(odd)": {
+      backgroundColor: theme.palette.action.hover,
+    },
+  },
+}))(TableRow);
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -184,58 +209,13 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "15px",
     marginLeft: "85px",
   },
+  table: {
+    minWidth: 300,
+  },
 }));
 
 function getSteps() {
   return ["Select campaign settings", "Create an ad group"];
-}
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return (
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Full Name"
-            type="text"
-            fullWidth
-            required
-          />
-          <MuiPhoneNumber
-            name="phone"
-            label="Phone Number"
-            data-cy="user-phone"
-            defaultCountry={"in"}
-            required
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="email"
-            label="Email Address"
-            type="email"
-            fullWidth
-            required
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="email"
-            label="Table No."
-            type="number"
-            fullWidth
-            placeholder="Leave this emplty if you are not at restaurant right now."
-          />
-        </DialogContent>
-      );
-    case 1:
-      return "Order Details";
-
-    default:
-      return "Unknown step";
-  }
 }
 
 function App(props) {
@@ -243,6 +223,116 @@ function App(props) {
   const [ph, updateph] = useState();
   const [popup, setPopup] = React.useState(false);
   const [activeStep, setActiveStep] = React.useState(0);
+  const [session, updatesession] = React.useState(0);
+  const storeid = props.storeid;
+  var orderitmes = [];
+  var rows = [];
+
+  orderitmes = [];
+  var temp = sessionStorage.getItem("food").split(",");
+  for (let i = 1; i < temp.length; i = i + 3) {
+    var tt = {
+      name: temp[i - 1],
+      price: 0,
+      quantity: temp[i + 1],
+    };
+    orderitmes.push(tt);
+  }
+  var totalprice = 0;
+  var itemfromserver = data.items;
+  for (let i = 0; i < orderitmes.length; i++) {
+    var tempname = orderitmes[i].name;
+    var exists = 0;
+    for (let j = 0; j < itemfromserver.length; j++) {
+      if (itemfromserver[j].name === tempname) {
+        exists = 1;
+        orderitmes[i].price = itemfromserver[j].price;
+        totalprice +=
+          parseInt(itemfromserver[j].price) * parseInt(orderitmes[i].quantity);
+      }
+    }
+    if (exists === 0) {
+      orderitmes.splice(i, 1);
+    }
+  }
+  orderitmes.push({ name: "Total", quantity: "=", price: totalprice });
+
+  function getStepContent(step) {
+    switch (step) {
+      case 0:
+        return (
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="Full Name"
+              type="text"
+              
+              fullWidth
+              required
+            />
+            <MuiPhoneNumber
+              name="phone"
+              label="Phone Number"
+              data-cy="user-phone"
+              defaultCountry={"in"}
+              required
+            />
+            <TextField
+              autoFocus
+              margin="dense"
+              id="email"
+              label="Email Address"
+              type="email"
+              fullWidth
+              required
+            />
+            <TextField
+              autoFocus
+              margin="dense"
+              id="email"
+              label="Table No."
+              type="number"
+              fullWidth
+              placeholder="Leave this emplty if you are not at restaurant right now."
+            />
+          </DialogContent>
+        );
+      case 1:
+        return (
+          <TableContainer component={Paper}>
+            <Table className={classes.table} aria-label="customized table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>Dish</StyledTableCell>
+                  <StyledTableCell align="right">Quantity</StyledTableCell>
+                  <StyledTableCell align="right">
+                    Price&nbsp;(₹)
+                  </StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {orderitmes.map((row) => (
+                  <StyledTableRow>
+                    <StyledTableCell component="th" scope="row">
+                      {row.name}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {row.quantity}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">{row.price}</StyledTableCell>
+                  </StyledTableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        );
+
+      default:
+        return "Unknown step";
+    }
+  }
 
   const steps = getSteps();
 
@@ -328,7 +418,7 @@ function App(props) {
                   onClick={handleNext}
                   className={classes.button}
                 >
-                  {activeStep === steps.length - 1 ? "Finish" : "Next"}
+                  {activeStep === steps.length - 1 ? "Place Order" : "Next"}
                 </Button>
               </div>
             </div>

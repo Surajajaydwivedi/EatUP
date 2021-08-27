@@ -37,6 +37,7 @@ import { Container, Grid, Card, CardContent, Box } from "@material-ui/core";
 import data from "./data.js";
 
 const axios = require("axios");
+var storeid = "abc-def-ghi"
 const drawerWidth = 300;
 const useStyles = makeStyles((theme) => ({
   menuButton: {
@@ -347,7 +348,7 @@ function App() {
 
         <Divider />
 
-        {itemcount && <PlaceOrder name={session} />}
+        {itemcount && <PlaceOrder name={session} id={storeid} />}
       </Drawer>
 
       {data.items.map((dish) => (
