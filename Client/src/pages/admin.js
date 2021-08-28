@@ -190,8 +190,9 @@ export default function App(props) {
             <AdminMenu />
           </Route>
         </Switch>
+        <Footer />
       </main>
-      <Footer />
+      
     </div>
   );
 }

@@ -20,6 +20,9 @@ const useStyles = makeStyles((theme) => ({
     fontfamily: "Lato",
     fontSize: "15px",
   },
+  footer: {
+    marginTop: "100px",
+  },
 }));
 
 export default function StickyFooter() {
