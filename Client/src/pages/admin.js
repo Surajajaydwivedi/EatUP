@@ -1,7 +1,7 @@
 import React from "react";
 
-import Currorder from "../components/Admincurrorders";
-import AdminMenu from "../components/Adminmenu";
+import Currorder from "../components/Admin/Admincurrorders";
+import AdminMenu from "../components/Admin/Adminmenu";
 import { Route, Switch } from "react-router-dom";
 
 import {
@@ -28,7 +28,8 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import Footer from "../components/menufooter"
+import Footer from "../components/menufooter";
+import Dashboard from "../components/Admin/AdminDashboard";
 
 const drawerWidth = 200;
 const useStyles = makeStyles((theme) => ({
@@ -109,7 +110,7 @@ export default function App(props) {
     {
       text: "Dashboard",
       icon: <DashboardIcon />,
-      onClick: () => history.push("/admin"),
+      onClick: () => history.push("/admin/dashboard"),
     },
     {
       text: "Current Orders",
@@ -183,6 +184,12 @@ export default function App(props) {
         })}
       >
         <Switch>
+          <Route path="/admin" exact>
+            <Dashboard />
+          </Route>
+          <Route path="/admin/dashboard">
+            <Dashboard />
+          </Route>
           <Route path="/admin/currentorders">
             <Currorder />
           </Route>
@@ -192,7 +199,6 @@ export default function App(props) {
         </Switch>
         <Footer />
       </main>
-      
     </div>
   );
 }
