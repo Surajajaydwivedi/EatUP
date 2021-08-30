@@ -1,9 +1,164 @@
-import React from "react";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import IconButton from "@material-ui/core/IconButton";
+import Typography from "@material-ui/core/Typography";
+import InputBase from "@material-ui/core/InputBase";
+import Badge from "@material-ui/core/Badge";
+import List from "@material-ui/core/List";
+import Drawer from "@material-ui/core/Drawer";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import DeleteIcon from "@material-ui/icons/Delete";
+import MenuItem from "@material-ui/core/MenuItem";
+import Menu from "@material-ui/core/Menu";
+import MenuIcon from "@material-ui/icons/Menu";
+import SearchIcon from "@material-ui/icons/Search";
+import AccountCircle from "@material-ui/icons/AccountCircle";
+import MailIcon from "@material-ui/icons/Mail";
+import NotificationsIcon from "@material-ui/icons/Notifications";
+import MoreIcon from "@material-ui/icons/MoreVert";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import MuiPhoneNumber from "material-ui-phone-number";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import React, { useState } from "react";
+import Divider from "@material-ui/core/Divider";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import EditIcon from "@material-ui/icons/Edit";
+import Switch from '@material-ui/core/Switch';
+import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
+import { Container, Grid, Card, CardContent, Box } from "@material-ui/core";
+import data from "../data";
 
-function Menu() {
-  return <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Rhoncus dolor purus non enim praesent elementum facilisis leo vel. Risus at ultrices mi tempus imperdiet. Semper risus in hendrerit gravida rutrum quisque non tellus. Convallis convallis tellus id interdum velit laoreet id donec ultrices. Odio morbi quis commodo odio aenean sed adipiscing. Amet nisl suscipit adipiscing bibendum est ultricies integer quis. Cursus euismod quis viverra nibh cras. Metus vulputate eu scelerisque felis imperdiet proin fermentum leo. Mauris commodo quis imperdiet massa tincidunt. Cras tincidunt lobortis feugiat vivamus at augue. At augue eget arcu dictum varius duis at consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa sapien faucibus et molestie ac.
+const useStyles = makeStyles((theme) => ({
+  menuButton: {
+    flexGrow: 1,
+    color: "#0D1B2A",
+  },
 
-  Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper eget nulla facilisi etiam dignissim diam. Pulvinar elementum integer enim neque volutpat ac tincidunt. Ornare suspendisse sed nisi lacus sed viverra tellus. Purus sit amet volutpat consequat mauris. Elementum eu facilisis sed odio morbi. Euismod lacinia at quis risus sed vulputate odio. Morbi tincidunt ornare massa eget egestas purus viverra accumsan in. In hendrerit gravida rutrum quisque non tellus orci ac. Pellentesque nec nam aliquam sem et tortor. Habitant morbi tristique senectus et. Adipiscing elit duis tristique sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla posuere sollicitudin aliquam ultrices sagittis orci a.</div>;
+  menu: {
+    marginTop: "20px",
+  },
+
+  controls: {
+    display: "flex",
+    alignItems: "center",
+    paddingLeft: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+    marginRight: "10px",
+  },
+
+  details: {
+    display: "flex",
+    flexDirection: "row",
+  },
+  content: {
+    flex: "1 0 auto",
+
+    alignItems: "center",
+    paddingLeft: theme.spacing(2),
+  },
+  drawerHeader: {
+    backgroundColor: "#3FDE82",
+    display: "flex",
+    alignItems: "center",
+    padding: theme.spacing(0, 1),
+    ...theme.mixins.toolbar,
+    justifyContent: "flex-end",
+  },
+  dishname: {
+    fontSize: "15px",
+    flexGrow: 1,
+    marginRight: "100px",
+  },
+  dishcount: {
+    fontSize: "15px",
+  },
+  fname: {
+    marginRight: "155px",
+  },
+
+  playIcon: {
+    height: 38,
+    width: 38,
+    fontSize: "small",
+  },
+  warning: {
+    color: "#b83e3e",
+  },
+  centre: {
+    marginTop: "15px",
+    textAlign: "center",
+    alignContent: "center",
+  },
+  button: {
+    marginTop: "10px",
+    marginLeft: "55px",
+    marginBottom: "-10px",
+  },
+  header: {
+    backgroundColor: "#3FDE82",
+  },
+}));
+
+function App() {
+  const classes = useStyles();
+  return (
+    <>
+      <Container maxWidth="xl" className={classes.menu}>
+        <Grid item xl={1}>
+          <Card className={classes.root}>
+            <div className={classes.details}>
+              <CardContent className={classes.content}>
+                <Typography component="h5" variant="h6">
+                  Menu Manager
+                </Typography>
+              </CardContent>
+              <div className={classes.controls}>
+                <IconButton>
+                   <PlaylistAddIcon className={classes.playIcon} />
+                </IconButton>
+              </div>
+            </div>
+          </Card>
+        </Grid>
+      </Container>
+      {data.items.map((dish) => (
+        <Container maxWidth="xl" className={classes.menu}>
+          <Grid item xl={1}>
+            <Card className={classes.root}>
+              <div className={classes.details}>
+                <CardContent className={classes.content}>
+                  <Typography component="h5" variant="h5">
+                    {dish.name}
+                  </Typography>
+                  <Typography variant="subtitle1" color="textSecondary">
+                    {dish.price} ₹
+                  </Typography>
+                  <Typography
+                    variant="subtitle2"
+                    color="textSecondary"
+                    className={classes.warning}
+                  ></Typography>
+                </CardContent>
+                <div className={classes.controls}>
+                <Switch />
+                  <IconButton>
+                    <EditIcon className={classes.playIcon} />
+                  </IconButton>
+                </div>
+              </div>
+            </Card>
+          </Grid>
+        </Container>
+      ))}
+    </>
+  );
 }
 
-export default Menu;
+export default App;

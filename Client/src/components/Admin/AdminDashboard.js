@@ -15,23 +15,16 @@ import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import Orders from "./AdminDashboardOrders";
 import Chart from "./AdminDashboardChart";
-import Week from "./AdminDashboardCards"
+import Week from "./AdminDashboardCards";
 import TrendingDownIcon from "@material-ui/icons/TrendingDown";
 import TrendingUpIcon from "@material-ui/icons/TrendingUp";
-import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
+import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 
 const useStyles = makeStyles({
   root: {
     minWidth: 300,
     marginBottom: 50,
     marginTop: 20,
-  },
-  bullet: {
-    color: "green",
-    
-    display: "inline-block",
-    
-    transform: "scale(0.8)",
   },
   title: {
     fontSize: 14,
@@ -43,7 +36,6 @@ const useStyles = makeStyles({
 
 export default function App() {
   const classes = useStyles();
-  const bull = <span className={classes.bullet}>•</span>;
 
   return (
     <Grid container spacing={1}>
@@ -95,14 +87,15 @@ export default function App() {
               color="textSecondary"
               gutterBottom
             >
-              Currently Active Orders 
-            </Typography> 
+              Currently Active Orders
+            </Typography>
             <Typography variant="h5" component="h2">
               17
             </Typography>
           </CardContent>
           <CardActions>
-            <Button size="small">Track Orders</Button> <FiberManualRecordIcon  style={{ color: "green" }} />
+            <Button size="small">Track Orders</Button>{" "}
+            <FiberManualRecordIcon style={{ color: "green" }} />
           </CardActions>
         </Card>
       </Grid>
@@ -132,7 +125,6 @@ export default function App() {
       <Grid container item lg={3} xs={12} spacing={1}>
         <Chart />
       </Grid>
-    
     </Grid>
   );
 }
