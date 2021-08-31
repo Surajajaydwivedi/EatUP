@@ -13,13 +13,16 @@ class App extends Component {
           id: "basic-bar",
         },
         xaxis: {
-          categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997],
+          categories: ["Mon", "Tues", "Wed", "Thur", "Fri", "Sat", "Sun"],
         },
+        fill: {
+          colors: ['#0D1B2A', '#B32824']
+        }
       },
       series: [
         {
-          name: "series-1",
-          data: [30, 40, 45, 50, 49, 60, 70, 91],
+          name: "Orders",
+          data: [8, 10, 8, 11, 12, 15, 18],
         },
       ],
     };
@@ -28,7 +31,7 @@ class App extends Component {
   render() {
     return (
       <>
-        <Typography variant= "h6">Order Stats</Typography>
+        <Typography variant= "h6">This Week</Typography>
         <div className="row">
           <div className="mixed-chart">
             <Chart

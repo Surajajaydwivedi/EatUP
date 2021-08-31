@@ -65,9 +65,12 @@ const useStyles = makeStyles((theme) => ({
     flexShrink: 0,
   },
   drawerPaper: {
+    color: "#FFFBFC",
+    backgroundColor: "#0D1B2A",
     width: drawerWidth,
   },
   drawerHeader: {
+    backgroundColor: "#3FDE82",
     display: "flex",
     alignItems: "center",
     padding: theme.spacing(0, 1),
@@ -110,17 +113,17 @@ export default function App(props) {
   const itemsList = [
     {
       text: "Dashboard",
-      icon: <DashboardIcon />,
+      icon: <DashboardIcon style = {{ color: "#FFFBFC" }}/>,
       onClick: () => history.push("/admin/dashboard"),
     },
     {
       text: "Current Orders",
-      icon: <RestaurantMenuIcon />,
+      icon: <RestaurantMenuIcon style = {{ color: "#FFFBFC" }}/>,
       onClick: () => history.push("/admin/currentorders"),
     },
     {
       text: "Menu Manager",
-      icon: <MenuBookIcon />,
+      icon: <MenuBookIcon style = {{ color: "#FFFBFC" }}/>,
       onClick: () => history.push("/admin/menu"),
     },
   ];
