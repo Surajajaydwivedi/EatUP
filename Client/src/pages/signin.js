@@ -17,6 +17,14 @@ import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import Mainheader from "../components/InfoSection/Mainheader";
 import Mainfooter from "../components/InfoSection/Mainfooter";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
+import axios from "axios";
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+const delay = ms => new Promise(res => setTimeout(res, ms));
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -47,6 +55,51 @@ export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = () => setShowPassword(!showPassword);
+  const [open, setOpen] = React.useState(false);
+  const [msg, updatemsg] = useState("");
+  const [pn, updatepn] = useState("");
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
+  const [enteredEmail, UpdateEnteredEmail] = useState("");
+  const [enteredPass, UpdateEnteredPass] = useState("");
+
+  function handlepasschange() {
+    var x = document.getElementById("password").value;
+    UpdateEnteredPass(x);
+  }
+  function handleemailchange() {
+    var x = document.getElementById("email").value;
+    UpdateEnteredEmail(x);
+  }
+  
+  async function validate() {
+    var data = {
+      email: enteredEmail,
+      password: enteredPass,
+    };
+    const resp = await axios.post("http://localhost:5000/adminsignin", data);
+    if (resp.data.bool === false) {
+      updatepn("error");
+      updatemsg("Wrong Credentials.");
+      handleClick();
+    } else {
+      updatepn("success");
+      updatemsg("Success! Redirecting.");
+      handleClick();
+      sessionStorage.setItem("SESS", resp.data.session);
+      await delay(5000);
+      window.open("/admin/dashboard","_self");
+    }
+  }
 
   return (
     <>
@@ -70,6 +123,7 @@ export default function SignIn() {
               label="Email Address"
               name="email"
               autoComplete="email"
+              onChange={handleemailchange}
               autoFocus
             />
             <TextField
@@ -82,6 +136,7 @@ export default function SignIn() {
               type={showPassword ? "text" : "password"}
               id="password"
               autoComplete="current-password"
+              onChange={handlepasschange}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -101,11 +156,11 @@ export default function SignIn() {
               label="Remember me"
             />
             <Button
-              type="submit"
               fullWidth
               variant="contained"
               color="primary"
               className={classes.submit}
+              onClick={validate}
             >
               Login
             </Button>
@@ -124,7 +179,14 @@ export default function SignIn() {
           </form>
         </div>
       </Container>
+
       {"  "}
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity={pn}>
+          {msg}
+        </Alert>
+      </Snackbar>
+
       <Mainfooter />
     </>
   );

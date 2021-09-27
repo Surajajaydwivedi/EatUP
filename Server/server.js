@@ -5,6 +5,7 @@ const app = express();
 var server = require("http").createServer(app);
 var formidable = require("formidable");
 var fs = require("fs");
+var crypto = require("crypto");
 
 server.listen(PORT, function () {
   var host = server.address().address;
@@ -25,22 +26,6 @@ const { SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS } = require("constants");
 mongoose.connect(
   "mongodb://eatup:eatupeatup@minor-shard-00-00.1y8bd.mongodb.net:27017,minor-shard-00-01.1y8bd.mongodb.net:27017,minor-shard-00-02.1y8bd.mongodb.net:27017/eatupdb?ssl=true&replicaSet=atlas-qu1lg5-shard-0&authSource=admin&retryWrites=true&w=majority"
 );
-
-const random = (length = 9) => {
-  let chars = "abcdefghijklmnopqrstuvwxyz";
-  let tempstr = "";
-  for (let i = 0; i < length; i++) {
-    tempstr += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  var str = "";
-  for (let i = 0; i < tempstr.length; i++) {
-    str += tempstr[i];
-    if ((i + 1) % 3 === 0 && i != tempstr.length - 1) {
-      str += "-";
-    }
-  }
-  return str;
-};
 
 var db = mongoose.connection;
 db.on("error", console.log.bind(console, "connection error"));
@@ -66,7 +51,7 @@ app.post("/check", async function (req, res) {
   }
 });
 
-app.post("/signup", async function (req, res) {
+app.post("/adminsignup", async function (req, res) {
   var obj = req.body;
   insert(obj);
 });
@@ -111,3 +96,41 @@ function insert(data) {
   db.collection("Landing").insertOne(data4);
   db.collection("Items").insertOne(dataitem);
 }
+
+function currtime() {
+  var d = new Date();
+  var n = d.getTime();
+  return n;
+}
+
+app.post("/adminsignin", async function (req, res) {
+  var obj = req.body;
+  var sess = crypto.randomBytes(16).toString("hex");
+  sess = sess + ":" + currtime().toString();
+
+  var xx = await db
+    .collection("Store Credentials")
+    .findOne({ email: obj.email, password: obj.password });
+
+  if (xx) {
+    res.json({
+      bool: true,
+      session: sess,
+      key: xx.key,
+    });
+  } else {
+    res.json({
+      bool: false,
+      session: "",
+      key: "",
+    });
+    return;
+  }
+
+  var temp = {
+    sessionid: sess,
+    key: xx.key,
+  };
+
+  db.collection("Sessions").insertOne(temp);
+});

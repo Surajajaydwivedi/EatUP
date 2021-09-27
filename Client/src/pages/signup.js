@@ -271,7 +271,7 @@ export default function HorizontalLinearStepper() {
       image: retval[1],
       items: [],
     };
-    axios.post("http://localhost:5000/signup", tempdata);
+    axios.post("http://localhost:5000/adminsignup", tempdata);
   }
 
   async function allgood() {

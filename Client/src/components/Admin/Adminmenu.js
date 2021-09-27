@@ -120,7 +120,7 @@ function App() {
                 </Typography>
               </CardContent>
               <div className={classes.controls}>
-                <IconButton>
+                <IconButton >
                    <PlaylistAddIcon className={classes.playIcon} />
                 </IconButton>
               </div>
