@@ -106,7 +106,7 @@ function currtime() {
 app.post("/adminsignin", async function (req, res) {
   var obj = req.body;
   var sess = crypto.randomBytes(16).toString("hex");
-  sess = sess + ":" + currtime().toString();
+  sess = sess;
 
   var xx = await db
     .collection("Store Credentials")
@@ -129,8 +129,31 @@ app.post("/adminsignin", async function (req, res) {
 
   var temp = {
     sessionid: sess,
+    time: currtime().toString(),
     key: xx.key,
   };
 
   db.collection("Sessions").insertOne(temp);
+});
+
+async function validatesessions(sess) {
+  if (!sess) {
+    return false;
+  }
+  var xx = await db.collection("Sessions").findOne({ sessionid: sess });
+  return xx;
+}
+
+app.post("/adminItemEdit", async function (req, res) {
+  var obj = req.body;
+  const sessdetails = validatesessions(obj.session);
+  if (sessdetails == false) {
+    res.json({ bool: false });
+    return false;
+  }
+  console.log(sessdetails,"check");
+  if (obj.type == "availability") {
+    var xx = await db.collection("Items").findOne({ key: sessdetails.key });
+    console.log(xx);
+  }
 });

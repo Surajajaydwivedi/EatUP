@@ -31,11 +31,14 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import EditIcon from "@material-ui/icons/Edit";
 import Switch from "@material-ui/core/Switch";
+import Fade from "@material-ui/core/Fade";
+import Backdrop from "@material-ui/core/Backdrop";
+import CircularProgress from "@material-ui/core/CircularProgress";
+
 import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import { Container, Grid, Card, CardContent, Box } from "@material-ui/core";
 import data from "../data";
-import AdminMenuItesm from "./AdminMenuItems"
-
+const axios = require("axios");
 const useStyles = makeStyles((theme) => ({
   menuButton: {
     flexGrow: 1,
@@ -107,9 +110,36 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function App() {
+function App(dish) {
+  const [open, setOpen] = React.useState(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleToggle = () => {
+    setOpen(!open);
+  };
   const classes = useStyles();
-  
+  const [available, updateAvailable] = useState(dish.available);
+  const [loading, setLoading] = React.useState(false);
+
+  async function AvailabilityChange(key) {
+    if(available===true){
+        updateAvailable(false)
+    }
+    else{
+        updateAvailable(true)
+    }
+
+    setLoading((prevLoading) => !prevLoading);
+    const ret = await axios.post("http://localhost:5000/adminItemEdit", {
+      session: sessionStorage.getItem("SESS"),
+      type: "availability",
+      change: available,
+      itemkey: key,
+    });
+    setLoading((prevLoading) => !prevLoading);
+  }
+
   return (
     <>
       <Container maxWidth="xl" className={classes.menu}>
@@ -117,23 +147,42 @@ function App() {
           <Card className={classes.root}>
             <div className={classes.details}>
               <CardContent className={classes.content}>
-                <Typography component="h5" variant="h6">
-                  Menu Manager
+                <Typography component="h5" variant="h5">
+                  {dish.name}
                 </Typography>
+                <Typography variant="subtitle1" color="textSecondary">
+                  {dish.price} ₹
+                </Typography>
+                <Typography
+                  variant="subtitle2"
+                  color="textSecondary"
+                  className={classes.warning}
+                ></Typography>
               </CardContent>
               <div className={classes.controls}>
+                <Fade
+                  in={loading}
+                  style={{
+                    transitionDelay: loading ? "500ms" : "1000ms",
+                  }}
+                  unmountOnExit
+                >
+                  <CircularProgress size="20px" />
+                </Fade>
+                <Switch
+                  checked={available}
+                  onChange={() => {
+                    AvailabilityChange(dish.keyy);
+                  }}
+                />
                 <IconButton>
-                  <PlaylistAddIcon className={classes.playIcon} />
+                  <EditIcon className={classes.playIcon} />
                 </IconButton>
               </div>
             </div>
           </Card>
         </Grid>
       </Container>
-      {data.items.map((dishh) => (
-        
-        <AdminMenuItesm keyy= {dishh.key} name={dishh.name} price={dishh.price} />
-      ))}
     </>
   );
 }
