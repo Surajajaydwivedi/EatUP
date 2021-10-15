@@ -25,7 +25,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import MuiPhoneNumber from "material-ui-phone-number";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Divider from "@material-ui/core/Divider";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -33,9 +33,9 @@ import EditIcon from "@material-ui/icons/Edit";
 import Switch from "@material-ui/core/Switch";
 import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import { Container, Grid, Card, CardContent, Box } from "@material-ui/core";
-import data from "../data";
-import AdminMenuItesm from "./AdminMenuItems"
 
+import AdminMenuItesm from "./AdminMenuItems";
+const axios = require("axios");
 const useStyles = makeStyles((theme) => ({
   menuButton: {
     flexGrow: 1,
@@ -109,7 +109,17 @@ const useStyles = makeStyles((theme) => ({
 
 function App() {
   const classes = useStyles();
-  
+  const [data, updatedata] = useState(null);
+  useEffect(() => {
+    async function op() {
+      var x = await axios.post("http://localhost:5000/GetItemsForMenuManager", {
+        session: sessionStorage.getItem("SESS"),
+      });
+      console.log(x.data);
+      updatedata(x.data);
+    }
+    op();
+  }, []);
   return (
     <>
       <Container maxWidth="xl" className={classes.menu}>
@@ -130,10 +140,15 @@ function App() {
           </Card>
         </Grid>
       </Container>
-      {data.items.map((dishh) => (
-        
-        <AdminMenuItesm keyy= {dishh.key} name={dishh.name} price={dishh.price} />
-      ))}
+      {data &&
+        data.items.map((dishh) => (
+          <AdminMenuItesm
+            keyy={dishh.Itemkey}
+            name={dishh.name}
+            price={dishh.price}
+            available={dishh.available}
+          />
+        ))}
     </>
   );
 }

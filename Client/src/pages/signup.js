@@ -269,7 +269,26 @@ export default function HorizontalLinearStepper() {
       city: city,
       logo: retval[0],
       image: retval[1],
-      items: [],
+      items: [
+        {
+          Itemkey: "12c-32f-faf3",
+          name: "Aloo Paratha",
+          price: "40",
+          available: "true",
+        },
+        {
+          Itemkey: "12c-32f-faf3",
+          name: "Chole Bhature",
+          price: "100",
+          available: "true",
+        },
+        {
+          Itemkey: "12c-32f-faf3",
+          name: "Chole Kulche",
+          price: "60",
+          available: "false",
+        },
+      ],
     };
     axios.post("http://localhost:5000/adminsignup", tempdata);
   }

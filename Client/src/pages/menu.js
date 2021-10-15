@@ -27,17 +27,17 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import MuiPhoneNumber from "material-ui-phone-number";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Divider from "@material-ui/core/Divider";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
 import { Container, Grid, Card, CardContent, Box } from "@material-ui/core";
-import data from "./data.js";
+import { Link, useLocation } from "react-router-dom";
 
 const axios = require("axios");
-var storeid = "abc-def-ghi"
+
 const drawerWidth = 300;
 const useStyles = makeStyles((theme) => ({
   menuButton: {
@@ -116,14 +116,28 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function App() {
+  let location = useLocation();
+  var storeid = location.pathname.split("/")[2];
   const classes = useStyles();
   const [itemcount, setCount] = useState(0);
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [session, updatesession] = useState([]);
   const [total, totalupdate] = useState(0);
+  const [data, updatedata] = useState(null);
+  useEffect(() => {
+    async function op() {
+      var x = await axios.post("http://localhost:5000/GetItemsForUser", {
+        key: storeid,
+      });
+
+      updatedata(x.data);
+    }
+    op();
+  }, []);
+
   function cartbtn(inputt, name, price) {
-    if (inputt === "true") {
+    if (inputt === true) {
       return (
         <IconButton
           aria-label="play/pause"
@@ -184,7 +198,6 @@ function App() {
     var ind = temp.indexOf(name);
 
     if (temp[ind + 2] === "1") {
-      console.log("Asdfasdf");
       temp.splice(ind, 1);
       temp.splice(ind, 1);
       temp.splice(ind, 1);
@@ -212,7 +225,7 @@ function App() {
   }
 
   function availability(inputt) {
-    if (inputt === "false") {
+    if (inputt === false) {
       return "Currently Unavailable";
     }
   }
@@ -237,7 +250,7 @@ function App() {
             aria-label="menu"
           ></IconButton>
           <Typography variant="h6" className={classes.menuButton}>
-            {data.name}
+            {data && data.name}
           </Typography>
           <Button edge="end" color="#0D1B2A">
             Login
@@ -351,34 +364,35 @@ function App() {
         {itemcount && <PlaceOrder name={session} id={storeid} />}
       </Drawer>
 
-      {data.items.map((dish) => (
-        <Container maxWidth="xl" className={classes.menu}>
-          <Grid item xl={1}>
-            <Card className={classes.root}>
-              <div className={classes.details}>
-                <CardContent className={classes.content}>
-                  <Typography component="h5" variant="h5">
-                    {dish.name}
-                  </Typography>
-                  <Typography variant="subtitle1" color="textSecondary">
-                    {dish.price} ₹
-                  </Typography>
-                  <Typography
-                    variant="subtitle2"
-                    color="textSecondary"
-                    className={classes.warning}
-                  >
-                    {availability(dish.available)}
-                  </Typography>
-                </CardContent>
-                <div className={classes.controls}>
-                  {cartbtn(dish.available, dish.name, dish.price)}
+      {data &&
+        data.items.map((dish) => (
+          <Container maxWidth="xl" className={classes.menu}>
+            <Grid item xl={1}>
+              <Card className={classes.root}>
+                <div className={classes.details}>
+                  <CardContent className={classes.content}>
+                    <Typography component="h5" variant="h5">
+                      {dish.name}
+                    </Typography>
+                    <Typography variant="subtitle1" color="textSecondary">
+                      {dish.price} ₹
+                    </Typography>
+                    <Typography
+                      variant="subtitle2"
+                      color="textSecondary"
+                      className={classes.warning}
+                    >
+                      {availability(dish.available)}
+                    </Typography>
+                  </CardContent>
+                  <div className={classes.controls}>
+                    {cartbtn(dish.available, dish.name, dish.price)}
+                  </div>
                 </div>
-              </div>
-            </Card>
-          </Grid>
-        </Container>
-      ))}
+              </Card>
+            </Grid>
+          </Container>
+        ))}
       <Footer />
     </div>
   );

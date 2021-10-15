@@ -136,6 +136,23 @@ app.post("/adminsignin", async function (req, res) {
   db.collection("Sessions").insertOne(temp);
 });
 
+app.post("/GetItemsForUser", async function (req, res) {
+  var obj = req.body;
+  var xx = await db.collection("Items").findOne({ key: obj.key });
+
+  if (xx) {
+    res.json({
+      bool: true,
+      name: "Pizza Hut",
+      image: "images/123.png",
+      logo: "images/123-logo.png",
+      items: xx.itmes,
+    });
+  } else {
+    res.json({ bool: false });
+  }
+});
+
 async function validatesessions(sess) {
   if (!sess) {
     return false;
@@ -144,16 +161,53 @@ async function validatesessions(sess) {
   return xx;
 }
 
+app.post("/GetItemsForMenuManager", async function (req, res) {
+  var obj = req.body;
+  const sessdetails = await validatesessions(obj.session);
+  if (sessdetails == false) {
+    res.json({
+      bool: false,
+    });
+    return;
+  }
+  var xx = await db.collection("Items").findOne({ key: sessdetails.key });
+  if (xx) {
+    res.json({
+      bool: true,
+      name: "Pizza Hut",
+      image: "images/123.png",
+      logo: "images/123-logo.png",
+      items: xx.itmes,
+    });
+  } else {
+    res.json({ bool: false });
+  }
+});
+
 app.post("/adminItemEdit", async function (req, res) {
   var obj = req.body;
-  const sessdetails = validatesessions(obj.session);
+  const sessdetails = await validatesessions(obj.session);
   if (sessdetails == false) {
     res.json({ bool: false });
     return false;
   }
-  console.log(sessdetails,"check");
+
   if (obj.type == "availability") {
     var xx = await db.collection("Items").findOne({ key: sessdetails.key });
-    console.log(xx);
+    itemlist = xx.itmes;
+
+    for (let i = 0; i < itemlist.length; i++) {
+      if (itemlist[i].Itemkey == obj.itemkey) {
+        itemlist[i].available = obj.change;
+        break;
+      }
+    }
+    db.collection("Items").updateOne(
+      { key: sessdetails.key },
+      {
+        $set: { itmes: itemlist },
+      }
+    );
+    res.json({ bool: true });
   }
 });

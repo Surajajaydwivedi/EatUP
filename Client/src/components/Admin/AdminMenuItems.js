@@ -123,18 +123,17 @@ function App(dish) {
   const [loading, setLoading] = React.useState(false);
 
   async function AvailabilityChange(key) {
-    if(available===true){
-        updateAvailable(false)
-    }
-    else{
-        updateAvailable(true)
+    if (available === true) {
+      updateAvailable(false);
+    } else {
+      updateAvailable(true);
     }
 
     setLoading((prevLoading) => !prevLoading);
     const ret = await axios.post("http://localhost:5000/adminItemEdit", {
       session: sessionStorage.getItem("SESS"),
       type: "availability",
-      change: available,
+      change: !available,
       itemkey: key,
     });
     setLoading((prevLoading) => !prevLoading);
