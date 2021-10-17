@@ -1,7 +1,7 @@
 import React from "react";
 
 import Currorder from "../components/Admin/Admincurrorders";
-import AdminMenu from "../components/Admin/Adminmenu";
+import AdminMenu from "../components/Admin/MenuManager/Adminmenu";
 import { Route, Switch } from "react-router-dom";
 
 import {

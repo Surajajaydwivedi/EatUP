@@ -37,7 +37,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 
 import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import { Container, Grid, Card, CardContent, Box } from "@material-ui/core";
-import data from "../data";
+import data from "../../data";
 const axios = require("axios");
 const useStyles = makeStyles((theme) => ({
   menuButton: {

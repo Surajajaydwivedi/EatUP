@@ -37,8 +37,7 @@ function crypt(p1) {
     var crypto = require("crypto");
     return (p1=='rest') ? crypto.randomBytes(2).toString('hex')+'-'+crypto.randomBytes(2).toString('hex')+'-'+crypto.randomBytes(2).toString('hex') : crypto.randomBytes(3).toString('hex');
 }
-/*console.log(crypt("rest"))
-console.log(crypt("item"))*/
+
 
 app.post("/check", async function (req, res) {
   var obj = req.body;

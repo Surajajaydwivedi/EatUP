@@ -33,7 +33,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import Switch from "@material-ui/core/Switch";
 import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import { Container, Grid, Card, CardContent, Box } from "@material-ui/core";
-
+import ItemAddition from "./AdminMenuItemAddition";
 import AdminMenuItesm from "./AdminMenuItems";
 const axios = require("axios");
 const useStyles = makeStyles((theme) => ({
@@ -110,6 +110,10 @@ const useStyles = makeStyles((theme) => ({
 function App() {
   const classes = useStyles();
   const [data, updatedata] = useState(null);
+  const [itemadder, updateitemadder] = useState(false);
+  function varupdater() {
+    updateitemadder(true);
+  }
   useEffect(() => {
     async function op() {
       var x = await axios.post("http://localhost:5000/GetItemsForMenuManager", {
@@ -132,14 +136,13 @@ function App() {
                 </Typography>
               </CardContent>
               <div className={classes.controls}>
-                <IconButton>
-                  <PlaylistAddIcon className={classes.playIcon} />
-                </IconButton>
+              <ItemAddition />
               </div>
             </div>
           </Card>
         </Grid>
       </Container>
+      
       {data &&
         data.items.map((dishh) => (
           <AdminMenuItesm
