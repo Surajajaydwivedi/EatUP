@@ -6,6 +6,7 @@ var server = require("http").createServer(app);
 var formidable = require("formidable");
 var fs = require("fs");
 var crypto = require("crypto");
+const exp = require("./ServerFiles/SignupInsert");
 
 server.listen(PORT, function () {
   var host = server.address().address;
@@ -34,10 +35,15 @@ db.once("open", function (callback) {
 });
 
 function crypt(p1) {
-    var crypto = require("crypto");
-    return (p1=='rest') ? crypto.randomBytes(2).toString('hex')+'-'+crypto.randomBytes(2).toString('hex')+'-'+crypto.randomBytes(2).toString('hex') : crypto.randomBytes(3).toString('hex');
+  var crypto = require("crypto");
+  return p1 == "rest"
+    ? crypto.randomBytes(2).toString("hex") +
+        "-" +
+        crypto.randomBytes(2).toString("hex") +
+        "-" +
+        crypto.randomBytes(2).toString("hex")
+    : crypto.randomBytes(3).toString("hex");
 }
-
 
 app.post("/check", async function (req, res) {
   var obj = req.body;
@@ -59,49 +65,13 @@ app.post("/check", async function (req, res) {
 
 app.post("/adminsignup", async function (req, res) {
   var obj = req.body;
-  insert(obj);
+  returnedData = exp.insert(obj);
+  db.collection("Store Credentials").insertOne(returnedData[0]);
+  db.collection("UserMenu").insertOne(returnedData[1]);
+  db.collection("Admin").insertOne(returnedData[2]);
+  db.collection("Landing").insertOne(returnedData[3]);
+  db.collection("Items").insertOne(returnedData[4]);
 });
-
-function insert(data) {
-  var data1 = {
-    key: data.key,
-    name: data.name,
-    phno: data.phno,
-    logo: data.logo,
-    image: data.image,
-  };
-  var data2 = {
-    key: data.key,
-    email: data.email,
-    password: data.password,
-  };
-  var data3 = {
-    key: data.key,
-    email: data.email,
-    password: data.password,
-    name: data.name,
-    phno: data.phno,
-    address: data.address,
-    city: data.city,
-    logo: data.logo,
-    image: data.image,
-  };
-  var data4 = {
-    key: data.key,
-    name: data.name,
-    city: data.city,
-  };
-  var dataitem = {
-    key: data.key,
-    itmes: data.items,
-  };
-
-  db.collection("Store Credentials").insertOne(data2);
-  db.collection("UserMenu").insertOne(data1);
-  db.collection("Admin").insertOne(data3);
-  db.collection("Landing").insertOne(data4);
-  db.collection("Items").insertOne(dataitem);
-}
 
 function currtime() {
   var d = new Date();
