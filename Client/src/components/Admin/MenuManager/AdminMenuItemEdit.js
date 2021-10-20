@@ -17,12 +17,15 @@ import FormControl from "@material-ui/core/FormControl";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import EditIcon from "@material-ui/icons/Edit";
 import Select from "@material-ui/core/Select";
+import Divider from "@material-ui/core/Divider";
+import DeleteIcon from "@material-ui/icons/Delete";
 const axios = require("axios");
 const useStyles = makeStyles((theme) => ({
   playIcon: {
-    height: 38,
-    width: 38,
+    height: 31,
+    width: 31,
     fontSize: "small",
   },
   formControl: {
@@ -34,16 +37,15 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 250,
   },
 }));
-const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
-export default function ResponsiveDialog() {
+export default function ResponsiveDialog(recieve) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [emrror, updateemrror] = React.useState("");
   const [alertopen, setalertOpen] = React.useState(false);
-  const [name, updatename] = React.useState("");
-  const [price, updateprice] = React.useState("");
-  const [select, updateselect] = React.useState("");
+  const [name, updatename] = React.useState(recieve.name);
+  const [price, updateprice] = React.useState(recieve.price);
+  const [select, updateselect] = React.useState(recieve.available);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -96,22 +98,28 @@ export default function ResponsiveDialog() {
       setOpen(false);
       await axios.post("http://localhost:5000/adminItemEdit", {
         session: sessionStorage.getItem("SESS"),
-        type: "addition",
+        type: "edit",
+        itemkey: recieve.keyy,
         name: name,
         price: price,
         available: select,
       });
-      
+
       window.location.reload();
     }
+  }
+  async function deleteitem() {
+    await axios.post("http://localhost:5000/adminItemEdit", {
+      session: sessionStorage.getItem("SESS"),
+      type: "delete",
+      itemkey: recieve.keyy,
+    });
+    window.location.reload();
   }
   return (
     <div>
       <IconButton>
-        <PlaylistAddIcon
-          onClick={handleClickOpen}
-          className={classes.playIcon}
-        />
+        <EditIcon className={classes.playIcon} onClick={handleClickOpen} />
       </IconButton>
 
       <Dialog
@@ -119,7 +127,20 @@ export default function ResponsiveDialog() {
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle id="responsive-dialog-title">{"Add a Dish"}</DialogTitle>
+        <DialogTitle id="responsive-dialog-title">
+          {"Edit/Delete this Dish"}
+        </DialogTitle>
+        <FormControl className={classes.formControlname}>
+          <Button
+            color="secondary"
+            className={classes.button}
+            startIcon={<DeleteIcon />}
+            onClick={deleteitem}
+          >
+            Delete
+          </Button>
+        </FormControl>
+        <Divider variant="middle" />
         <DialogContent>
           <FormControl className={classes.formControlname}>
             <TextField
@@ -127,6 +148,7 @@ export default function ResponsiveDialog() {
               id="standard-basic"
               label="Dish Name"
               onChange={namehandle}
+              defaultValue={recieve.name}
             />
           </FormControl>
           <FormControl className={classes.formControl}>
@@ -141,6 +163,7 @@ export default function ResponsiveDialog() {
               type="number"
               fullWidth
               onChange={pricehandle}
+              defaultValue={recieve.price}
               id="standard-adornment-amount"
               endAdornment={<InputAdornment position="end">₹</InputAdornment>}
             />
@@ -151,6 +174,7 @@ export default function ResponsiveDialog() {
               labelId="demo-simple-select-label"
               id="simple-select"
               onChange={selecthandle}
+              defaultValue={recieve.select}
             >
               <MenuItem value={1} selected="selected">
                 Available
@@ -164,7 +188,7 @@ export default function ResponsiveDialog() {
             Discard
           </Button>
           <Button onClick={proceed} color="primary" autoFocus>
-            Add
+            Apply Changes
           </Button>
         </DialogActions>
         <Snackbar

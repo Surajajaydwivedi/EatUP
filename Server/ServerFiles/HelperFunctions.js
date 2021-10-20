@@ -36,4 +36,11 @@ function insert(data) {
   
 }
 
-module.exports = { insert };
+function currtime() {
+  var d = new Date();
+  var n = d.getTime();
+  return n;
+}
+
+
+module.exports = { insert,currtime };

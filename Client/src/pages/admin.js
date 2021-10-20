@@ -1,6 +1,6 @@
 import React from "react";
 
-import Currorder from "../components/Admin/Admincurrorders";
+import Currorder from "../components/Admin/CurrentOrders/Admincurrorders";
 import AdminMenu from "../components/Admin/MenuManager/Adminmenu";
 import { Route, Switch } from "react-router-dom";
 
@@ -29,7 +29,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Footer from "../components/menufooter";
-import Dashboard from "../components/Admin/AdminDashboard";
+import Dashboard from "../components/Admin/AdminDashboard/AdminDashboard";
 
 const drawerWidth = 200;
 const useStyles = makeStyles((theme) => ({

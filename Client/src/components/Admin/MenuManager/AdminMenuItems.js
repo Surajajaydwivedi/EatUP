@@ -37,6 +37,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 
 import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import { Container, Grid, Card, CardContent, Box } from "@material-ui/core";
+import ItemEdit from "./AdminMenuItemEdit"
 import data from "../../data";
 const axios = require("axios");
 const useStyles = makeStyles((theme) => ({
@@ -88,8 +89,8 @@ const useStyles = makeStyles((theme) => ({
   },
 
   playIcon: {
-    height: 38,
-    width: 38,
+    height: 31,
+    width: 31,
     fontSize: "small",
   },
   warning: {
@@ -174,9 +175,7 @@ function App(dish) {
                     AvailabilityChange(dish.keyy);
                   }}
                 />
-                <IconButton>
-                  <EditIcon className={classes.playIcon} />
-                </IconButton>
+                <ItemEdit keyy = {dish.keyy} name={dish.name} price={dish.price} select={dish.available===true ? 1 : 2}/>
               </div>
             </div>
           </Card>

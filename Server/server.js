@@ -6,7 +6,7 @@ var server = require("http").createServer(app);
 var formidable = require("formidable");
 var fs = require("fs");
 var crypto = require("crypto");
-const exp = require("./ServerFiles/SignupInsert");
+const hp = require("./ServerFiles/HelperFunctions");
 
 server.listen(PORT, function () {
   var host = server.address().address;
@@ -65,25 +65,20 @@ app.post("/check", async function (req, res) {
 
 app.post("/adminsignup", async function (req, res) {
   var obj = req.body;
-  returnedData = exp.insert(obj);
+  returnedData = hp.insert(obj);
   db.collection("Store Credentials").insertOne(returnedData[0]);
   db.collection("UserMenu").insertOne(returnedData[1]);
   db.collection("Admin").insertOne(returnedData[2]);
   db.collection("Landing").insertOne(returnedData[3]);
   db.collection("Items").insertOne(returnedData[4]);
+  res.json({
+    bool: true,
+  });
 });
-
-function currtime() {
-  var d = new Date();
-  var n = d.getTime();
-  return n;
-}
 
 app.post("/adminsignin", async function (req, res) {
   var obj = req.body;
   var sess = crypto.randomBytes(16).toString("hex");
-  sess = sess;
-
   var xx = await db
     .collection("Store Credentials")
     .findOne({ email: obj.email, password: obj.password });
@@ -103,13 +98,11 @@ app.post("/adminsignin", async function (req, res) {
     return;
   }
 
-  var temp = {
+  db.collection("Sessions").insertOne({
     sessionid: sess,
-    time: currtime().toString(),
+    time: hp.currtime().toString(),
     key: xx.key,
-  };
-
-  db.collection("Sessions").insertOne(temp);
+  });
 });
 
 app.post("/GetItemsForUser", async function (req, res) {
@@ -175,6 +168,56 @@ app.post("/adminItemEdit", async function (req, res) {
     for (let i = 0; i < itemlist.length; i++) {
       if (itemlist[i].Itemkey == obj.itemkey) {
         itemlist[i].available = obj.change;
+        break;
+      }
+    }
+    db.collection("Items").updateOne(
+      { key: sessdetails.key },
+      {
+        $set: { itmes: itemlist },
+      }
+    );
+    res.json({ bool: true });
+  } else if (obj.type == "addition") {
+    var xx = await db.collection("Items").findOne({ key: sessdetails.key });
+    itemlist = xx.itmes;
+    itemlist.push({
+      key: crypt("dish"),
+      name: obj.name,
+      price: obj.price,
+      available: obj.available,
+    });
+    db.collection("Items").updateOne(
+      { key: sessdetails.key },
+      {
+        $set: { itmes: itemlist },
+      }
+    );
+    res.json({ bool: true });
+  } else if (obj.type == "edit") {
+    var xx = await db.collection("Items").findOne({ key: sessdetails.key });
+    itemlist = xx.itmes;
+    for (let i = 0; i < itemlist.length; i++) {
+      if (itemlist[i].Itemkey == obj.itemkey) {
+        itemlist[i].name = obj.name;
+        itemlist[i].price = obj.price;
+        itemlist[i].available = obj.available;
+        break;
+      }
+    }
+    db.collection("Items").updateOne(
+      { key: sessdetails.key },
+      {
+        $set: { itmes: itemlist },
+      }
+    );
+    res.json({ bool: true });
+  } else if (obj.type == "delete") {
+    var xx = await db.collection("Items").findOne({ key: sessdetails.key });
+    itemlist = xx.itmes;
+    for (let i = 0; i < itemlist.length; i++) {
+      if (itemlist[i].Itemkey == obj.itemkey) {
+        itemlist.splice(i, 1);
         break;
       }
     }
