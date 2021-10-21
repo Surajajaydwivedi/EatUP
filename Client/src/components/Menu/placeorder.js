@@ -49,7 +49,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { func } from "prop-types";
-import data from "../pages/data";
+import data from "../../pages/data";
 
 const QontoConnector = withStyles({
   alternativeLabel: {

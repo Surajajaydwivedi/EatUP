@@ -1,5 +1,6 @@
-import PlaceOrder from "../components/placeorder";
-import Footer from "../components/menufooter";
+import PlaceOrder from "../components/Menu/placeorder";
+import Footer from "../components/Menu/menufooter";
+import Cart from "../components/Menu/Cart";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
@@ -120,11 +121,8 @@ function App() {
   var storeid = location.pathname.split("/")[2];
   const classes = useStyles();
   const [itemcount, setCount] = useState(0);
-  const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
-  const [session, updatesession] = useState([]);
-  const [total, totalupdate] = useState(0);
   const [data, updatedata] = useState(null);
+
   useEffect(() => {
     async function op() {
       var x = await axios.post("http://localhost:5000/GetItemsForUser", {
@@ -174,71 +172,13 @@ function App() {
         sessionStorage.setItem("food", text);
       }
     }
-    temp = sessionStorage.getItem("food").split(",");
-    var tempobj = [];
-    var tempcount = 0;
-    var temptotal = 0;
-    for (let i = 1; i < temp.length; i = i + 3) {
-      var tt = {
-        name: temp[i - 1],
-        price: temp[i],
-        total: temp[i + 1],
-      };
-      tempobj.push(tt);
-      tempcount += 1;
-      temptotal = temptotal + parseInt(temp[i] * temp[i + 1]);
-    }
-    setCount(tempcount);
-    totalupdate(temptotal);
-    updatesession(tempobj);
+    cc = sessionStorage.getItem("food").split(",");
+    setCount((cc.length - 1) / 3);
   }
-
-  function deleteitem(name) {
-    var temp = sessionStorage.getItem("food").split(",");
-    var ind = temp.indexOf(name);
-
-    if (temp[ind + 2] === "1") {
-      temp.splice(ind, 1);
-      temp.splice(ind, 1);
-      temp.splice(ind, 1);
-    } else {
-      temp[ind + 2] = temp[ind + 2] - 1;
-    }
-    let text = temp.toString();
-    sessionStorage.setItem("food", text);
-    var tempobj = [];
-    var tempcount = 0;
-    var temptotal = 0;
-    for (let i = 1; i < temp.length; i = i + 3) {
-      var tt = {
-        name: temp[i - 1],
-        price: temp[i],
-        total: temp[i + 1],
-      };
-      tempobj.push(tt);
-      tempcount += 1;
-      temptotal = temptotal + parseInt(temp[i] * temp[i + 1]);
-    }
-    setCount(tempcount);
-    totalupdate(temptotal);
-    updatesession(tempobj);
-  }
-
-  function availability(inputt) {
-    if (inputt === false) {
-      return "Currently Unavailable";
-    }
-  }
-
-  const handleDrawerOpen = () => {
-    add("", 0);
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
   window.addEventListener("load", () => add("", 0));
+  if (document.getElementById("cartClose")) {
+    document.getElementById("cartClose").addEventListener("click", ()=>{add("", 0)});
+  }
   return (
     <div className={classes.allbg}>
       <CssBaseline />
@@ -255,115 +195,14 @@ function App() {
           <Button edge="end" color="#0D1B2A">
             Login
           </Button>
-          <IconButton color="#0D1B2A">
-            <Badge
-              badgeContent={itemcount}
-              color="secondary"
-              onClick={handleDrawerOpen}
-            >
+          <IconButton color="#0D1B2A" id="cartButton">
+            <Badge badgeContent={itemcount} color="secondary">
               <ShoppingCartIcon />
             </Badge>
           </IconButton>
         </Toolbar>
       </AppBar>
-
-      <Drawer
-        className={classes.drawer}
-        variant="persistent"
-        anchor="right"
-        open={open}
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-      >
-        <div className={classes.drawerHeader}>
-          <Typography flexGrow="1">Cart</Typography>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "rtl" ? (
-              <ChevronLeftIcon />
-            ) : (
-              <ChevronRightIcon />
-            )}
-          </IconButton>
-        </div>
-        <Divider />
-
-        {itemcount > 0 &&
-          session.map((dish) => (
-            <List>
-              <Container maxWidth="xl" className={classes.menu}>
-                <Grid item xl={1}>
-                  <Card className={classes.root}>
-                    <div className={classes.details}>
-                      <CardContent className={classes.content}>
-                        <Typography
-                          component="h6"
-                          variant="h6"
-                          className={classes.dishname}
-                          display="inline"
-                        >
-                          {dish.name}
-                        </Typography>
-                        <Typography
-                          component="h6"
-                          variant="h6"
-                          display="inline"
-                          className={classes.dishcount}
-                        >
-                          X {dish.total}
-                        </Typography>
-                        <Typography variant="subtitle1" color="textSecondary">
-                          {dish.price} ₹{"     "}
-                        </Typography>
-
-                        <Button
-                          variant="contained"
-                          color="secondary"
-                          className={classes.button}
-                          startIcon={<DeleteIcon />}
-                          onClick={() => {
-                            deleteitem(dish.name);
-                          }}
-                        >
-                          Delete
-                        </Button>
-                      </CardContent>
-                    </div>
-                  </Card>
-                </Grid>
-              </Container>
-            </List>
-          ))}
-        <Divider />
-        <Grid item xl={1}>
-          <Card className={classes.root}>
-            <div className={classes.details}>
-              <CardContent className={classes.content}>
-                <Typography
-                  component="h6"
-                  variant="h6"
-                  display="inline"
-                  className={classes.fname}
-                >
-                  Total
-                </Typography>
-                <Typography
-                  variant="subtitle1"
-                  color="textSecondary"
-                  display="inline"
-                >
-                  {total} ₹
-                </Typography>
-              </CardContent>
-            </div>
-          </Card>
-        </Grid>
-
-        <Divider />
-
-        {itemcount && <PlaceOrder name={session} id={storeid} />}
-      </Drawer>
-
+      <Cart />
       {data &&
         data.items.map((dish) => (
           <Container maxWidth="xl" className={classes.menu}>
@@ -382,7 +221,7 @@ function App() {
                       color="textSecondary"
                       className={classes.warning}
                     >
-                      {availability(dish.available)}
+                      {dish.available ? "" : "Currently Unavailable"}
                     </Typography>
                   </CardContent>
                   <div className={classes.controls}>

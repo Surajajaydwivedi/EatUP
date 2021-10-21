@@ -27,7 +27,7 @@ import MuiPhoneNumber from "material-ui-phone-number";
 import { red } from "@material-ui/core/colors";
 import Mainfooter from "../components/InfoSection/Mainfooter";
 import Mainheader from "../components/InfoSection/Mainheader";
-import QR from "../components/qr";
+import QR from "../components/HelperComponents/qr";
 import ReactS3 from "react-s3";
 import { uploadFile } from "react-s3";
 const crypto = require("crypto");
