@@ -31,6 +31,7 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import EditIcon from "@material-ui/icons/Edit";
 import Switch from "@material-ui/core/Switch";
+
 import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import { Container, Grid, Card, CardContent, Box } from "@material-ui/core";
 import ItemAddition from "./AdminMenuItemAddition";
@@ -119,19 +120,20 @@ function App() {
       var x = await axios.post("http://localhost:5000/GetItemsForMenuManager", {
         session: sessionStorage.getItem("SESS"),
       });
-      console.log(x.data);
+      
       updatedata(x.data);
     }
     op();
   }, []);
   return (
     <>
+
       <Container maxWidth="xl" className={classes.menu}>
         <Grid item xl={1}>
           <Card className={classes.root}>
             <div className={classes.details}>
               <CardContent className={classes.content}>
-                <Typography component="h5" variant="h6">
+                <Typography component="h6" variant="h6">
                   Menu Manager
                 </Typography>
               </CardContent>
@@ -152,6 +154,7 @@ function App() {
             available={dishh.available}
           />
         ))}
+        
     </>
   );
 }

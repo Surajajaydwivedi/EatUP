@@ -2,6 +2,8 @@ import React from "react";
 
 import Currorder from "../components/Admin/CurrentOrders/Admincurrorders";
 import AdminMenu from "../components/Admin/MenuManager/Adminmenu";
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import CropFreeIcon from "@material-ui/icons/CropFree";
 import { Route, Switch } from "react-router-dom";
 
 import {
@@ -21,17 +23,18 @@ import clsx from "clsx";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-  
+
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
+import ReceiptIcon from '@material-ui/icons/Receipt';
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Footer from "../components/Menu/menufooter";
 import Dashboard from "../components/Admin/AdminDashboard/AdminDashboard";
-
-const drawerWidth = 200;
+import Qr from "../components/HelperComponents/qr";
+const drawerWidth = 220;
 const useStyles = makeStyles((theme) => ({
   container: {
     display: "flex",
@@ -113,18 +116,28 @@ export default function App(props) {
   const itemsList = [
     {
       text: "Dashboard",
-      icon: <DashboardIcon style = {{ color: "#FFFBFC" }}/>,
+      icon: <DashboardIcon style={{ color: "#FFFBFC" }} />,
       onClick: () => history.push("/admin/dashboard"),
     },
     {
       text: "Current Orders",
-      icon: <RestaurantMenuIcon style = {{ color: "#FFFBFC" }}/>,
+      icon: <RestaurantMenuIcon style={{ color: "#FFFBFC" }} />,
       onClick: () => history.push("/admin/currentorders"),
     },
     {
+      text: "Previous Orders",
+      icon: <ReceiptIcon style={{ color: "#FFFBFC" }} />,
+      onClick: () => history.push("/admin/prevorders"),
+    },
+    {
       text: "Menu Manager",
-      icon: <MenuBookIcon style = {{ color: "#FFFBFC" }}/>,
+      icon: <MenuBookIcon style={{ color: "#FFFBFC" }} />,
       onClick: () => history.push("/admin/menu"),
+    },
+    {
+      text: "Your QR",
+      icon: <CropFreeIcon style={{ color: "#FFFBFC" }} />,
+      onClick: () => history.push("/admin/qr"),
     },
   ];
   return (
@@ -180,6 +193,12 @@ export default function App(props) {
               </ListItem>
             );
           })}
+          
+          <Divider />
+          <ListItem button key={"Log Out"} onClick={""}>
+                <ListItemIcon><ExitToAppIcon style={{ color: "#FFFBFC" }} /></ListItemIcon>
+                <ListItemText primary={"Log Out"} />
+              </ListItem>
         </List>
       </MUIDrawer>
       <main
@@ -199,6 +218,9 @@ export default function App(props) {
           </Route>
           <Route path="/admin/menu">
             <AdminMenu />
+          </Route>
+          <Route path="/admin/qr">
+            <Qr />
           </Route>
         </Switch>
         <Footer />

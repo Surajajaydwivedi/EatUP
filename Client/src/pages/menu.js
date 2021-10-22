@@ -180,8 +180,7 @@ function App() {
     document.getElementById("cartClose").addEventListener("click", ()=>{add("", 0)});
   }
   return (
-    <div className={classes.allbg}>
-      <CssBaseline />
+    <div >
       <AppBar position="static" className={classes.header}>
         <Toolbar>
           <IconButton
@@ -199,7 +198,7 @@ function App() {
             <Badge badgeContent={itemcount} color="secondary">
               <ShoppingCartIcon />
             </Badge>
-          </IconButton>
+          </IconButton> 
         </Toolbar>
       </AppBar>
       <Cart />

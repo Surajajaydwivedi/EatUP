@@ -37,9 +37,10 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 
 import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import { Container, Grid, Card, CardContent, Box } from "@material-ui/core";
-import ItemEdit from "./AdminMenuItemEdit"
+import ItemEdit from "./AdminMenuItemEdit";
 import data from "../../data";
 const axios = require("axios");
+
 const useStyles = makeStyles((theme) => ({
   menuButton: {
     flexGrow: 1,
@@ -51,11 +52,10 @@ const useStyles = makeStyles((theme) => ({
   },
 
   controls: {
-    display: "flex",
+    display: window.screen.width < 650 ? "" : "flex",
     alignItems: "center",
-    paddingLeft: theme.spacing(1),
     paddingBottom: theme.spacing(1),
-    marginRight: "10px",
+    marginRight: "5px",
   },
 
   details: {
@@ -147,17 +147,12 @@ function App(dish) {
           <Card className={classes.root}>
             <div className={classes.details}>
               <CardContent className={classes.content}>
-                <Typography component="h5" variant="h5">
+                <Typography component= {window.screen.width < 650 ? "h6" : "h5"} variant= {window.screen.width < 650 ? "h6" : "h5"}>
                   {dish.name}
                 </Typography>
                 <Typography variant="subtitle1" color="textSecondary">
                   {dish.price} ₹
                 </Typography>
-                <Typography
-                  variant="subtitle2"
-                  color="textSecondary"
-                  className={classes.warning}
-                ></Typography>
               </CardContent>
               <div className={classes.controls}>
                 <Fade
@@ -175,7 +170,12 @@ function App(dish) {
                     AvailabilityChange(dish.keyy);
                   }}
                 />
-                <ItemEdit keyy = {dish.keyy} name={dish.name} price={dish.price} select={dish.available===true ? 1 : 2}/>
+                <ItemEdit
+                  keyy={dish.keyy}
+                  name={dish.name}
+                  price={dish.price}
+                  select={dish.available === true ? 1 : 2}
+                />
               </div>
             </div>
           </Card>

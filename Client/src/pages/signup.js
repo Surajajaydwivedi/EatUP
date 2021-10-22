@@ -521,7 +521,7 @@ export default function HorizontalLinearStepper() {
         return (
           <>
             <div id="placeHolder"></div>
-            <QR keyy={key} />{" "}
+            <QR keyy={key} admin={true} />{" "}
           </>
         );
       default:

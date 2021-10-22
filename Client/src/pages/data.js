@@ -15,7 +15,7 @@ const data = {
         available: "false",
       },
       {
-        name: "Chole Bhatue",
+        name: "Chole Bhature",
         price: "100",
         available: "true",
       },
