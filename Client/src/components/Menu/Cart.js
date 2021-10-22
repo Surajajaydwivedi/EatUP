@@ -82,9 +82,12 @@ const useStyles = makeStyles((theme) => ({
   dishname: {
     fontSize: "15px",
     flexGrow: 1,
-    marginRight: "100px",
+    
   },
   dishcount: {
+    marginRight: "25px",
+    marginLeft: "80px",
+    
     fontSize: "15px",
   },
   fname: {
@@ -142,7 +145,8 @@ function App() {
       };
       tempobj.push(tt);
       tempcount += 1;
-      temptotal = temptotal + parseInt(temp[i] * temp[i + 1]);
+      var priceextract = temp[i].split("/")[0]
+      temptotal = temptotal + parseInt(priceextract * temp[i + 1]);
     }
     setCount(tempcount);
     totalupdate(temptotal);
@@ -173,7 +177,8 @@ function App() {
       };
       tempobj.push(tt);
       tempcount += 1;
-      temptotal = temptotal + parseInt(temp[i] * temp[i + 1]);
+      var priceextract = temp[i].split("/")[0]
+      temptotal = temptotal + parseInt(priceextract * temp[i + 1]);
     }
     setCount(tempcount);
     totalupdate(temptotal);
@@ -241,7 +246,7 @@ function App() {
                           X {dish.total}
                         </Typography>
                         <Typography variant="subtitle1" color="textSecondary">
-                          {dish.price} ₹{"     "}
+                          {(dish.price).split("/")[0]} ₹{"     "}
                         </Typography>
 
                         <Button
@@ -287,7 +292,7 @@ function App() {
           </Card>
         </Grid>
         <Divider />
-        {itemcount && <PlaceOrder name={session} id={storeid} />}
+        {itemcount && <PlaceOrder name={session} storeid={storeid} />}
       </Drawer>
     </>
   );

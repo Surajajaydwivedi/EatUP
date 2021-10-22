@@ -33,7 +33,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import MuiPhoneNumber from "material-ui-phone-number";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Divider from "@material-ui/core/Divider";
 import { makeStyles, useTheme, withStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
@@ -49,7 +49,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { func } from "prop-types";
-import data from "../../pages/data";
+const axios = require("axios");
 
 const QontoConnector = withStyles({
   alternativeLabel: {
@@ -224,27 +224,45 @@ function App(props) {
   const [popup, setPopup] = React.useState(false);
   const [activeStep, setActiveStep] = React.useState(0);
   const [session, updatesession] = React.useState(0);
+  const [data, updatedata] = React.useState(false);
   const storeid = props.storeid;
   var orderitmes = [];
   var rows = [];
+
+  useEffect(() => {
+    async function op() {
+      var x = await axios.post("http://localhost:5000/GetItemsForUser", {
+        key: storeid,
+      });
+      console.log(x.data);
+      updatedata(x.data);
+    }
+    op();
+  }, []);
 
   orderitmes = [];
   var temp = sessionStorage.getItem("food").split(",");
   for (let i = 1; i < temp.length; i = i + 3) {
     var tt = {
       name: temp[i - 1],
-      price: 0,
+      Itemkey: temp[i].split("/")[1],
       quantity: temp[i + 1],
+      price: 0,
     };
     orderitmes.push(tt);
   }
   var totalprice = 0;
-  var itemfromserver = data.items;
-  for (let i = 0; i < orderitmes.length; i++) {
-    var tempname = orderitmes[i].name;
+  var itemfromserver = [];
+  if (data) {
+    itemfromserver = data.items;
+  }
+  var i = 0;
+  while (i < orderitmes.length) {
+    var tempitemkey = orderitmes[i].Itemkey;
+    console.log(tempitemkey);
     var exists = 0;
     for (let j = 0; j < itemfromserver.length; j++) {
-      if (itemfromserver[j].name === tempname) {
+      if (itemfromserver[j].Itemkey === tempitemkey) {
         exists = 1;
         orderitmes[i].price = itemfromserver[j].price;
         totalprice +=
@@ -253,6 +271,8 @@ function App(props) {
     }
     if (exists === 0) {
       orderitmes.splice(i, 1);
+    } else {
+      i = i + 1;
     }
   }
   orderitmes.push({ name: "Total", quantity: "=", price: totalprice });
@@ -268,7 +288,6 @@ function App(props) {
               id="name"
               label="Full Name"
               type="text"
-              
               fullWidth
               required
             />

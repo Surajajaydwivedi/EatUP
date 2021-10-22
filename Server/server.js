@@ -182,7 +182,7 @@ app.post("/adminItemEdit", async function (req, res) {
     var xx = await db.collection("Items").findOne({ key: sessdetails.key });
     itemlist = xx.itmes;
     itemlist.push({
-      key: crypt("dish"),
+      Itemkey: crypt("dish"),
       name: obj.name,
       price: obj.price,
       available: obj.available,
