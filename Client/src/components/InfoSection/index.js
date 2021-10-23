@@ -260,23 +260,23 @@ const Services = () => {
       <ServicesWrapper>
         <ServicesCard>
           <ServicesIcon src={Icon1} />
-          <ServicesH2>Card 1 Ka Title</ServicesH2>
+          <ServicesH2>QR Code Menu</ServicesH2>
           <ServicesP>
-            Card 1 Ka Paragraph asdfghjkl asdfghjkl asdfghjkl asdfghjkl
+            YumTrip provides you a QR code for customers to easily discover your catalogue in the store
           </ServicesP>
         </ServicesCard>
         <ServicesCard>
           <ServicesIcon src={Icon2} />
-          <ServicesH2>Card 2 Ka Title</ServicesH2>
+          <ServicesH2>Super fast experience</ServicesH2>
           <ServicesP>
-            Card 2 Ka Paragraph asdfghjkl asdfghjkl asdfghjkl asdfghjkl
+            Forget all the hassel of reaching out every customer, YumTrip will handle EVERYTHING!
           </ServicesP>
         </ServicesCard>
         <ServicesCard>
           <ServicesIcon src={Icon3} />
-          <ServicesH2>Card 3 Ka Title</ServicesH2>
+          <ServicesH2>One-time setup</ServicesH2>
           <ServicesP>
-            Card 3 Ka Paragraph asdfghjkl asdfghjkl asdfghjkl asdfghjkl
+            No need of additional softwares, YumTrip is sufficent for your needs and your customers'
           </ServicesP>
         </ServicesCard>
       </ServicesWrapper>
