@@ -189,7 +189,7 @@ const Banner = () => {
       </BannerBg>
       <BannerContent>
         <BannerH1>YumTrip</BannerH1>
-        <BannerP>1234567</BannerP>
+        <BannerP>Search for restaurant, cuisine or a dish</BannerP>
         <SearchBar/>
       </BannerContent>
     </BannerContainer>
