@@ -5,7 +5,7 @@ const Mainfooter = () => {
         <FooterContainer>
         <FooterWrap>
             <FooterLinkTitle to="/">
-            EatUp
+            YumTrip
             </FooterLinkTitle>
             <FooterLinkSubtitle>
             Get tools that grow your business
@@ -25,7 +25,7 @@ const Mainfooter = () => {
             </FooterLinksContainer>
             <FooterCopyRight>
             {" "}
-            &copy; EatUp {new Date().getFullYear()}
+            &copy; YumTrip {new Date().getFullYear()}
             &nbsp;All rights reserved.
             </FooterCopyRight>
         </FooterWrap>

@@ -188,7 +188,7 @@ const Banner = () => {
         <VideoBg autoPlay loop muted src={Video} type="video/mp4" />
       </BannerBg>
       <BannerContent>
-        <BannerH1>YumTrip</BannerH1>
+        <BannerH1>Hungry?</BannerH1>
         <BannerP>Search for restaurant, cuisine or a dish</BannerP>
         <SearchBar/>
       </BannerContent>
@@ -313,7 +313,7 @@ const Footer = () => {
         </FooterLinksContainer>
         <FooterCopyRight>
           {" "}
-          &copy; EatUp {new Date().getFullYear()}
+          &copy; YumTrip {new Date().getFullYear()}
           &nbsp;All rights reserved.
         </FooterCopyRight>
       </FooterWrap>

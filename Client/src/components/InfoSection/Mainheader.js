@@ -6,7 +6,7 @@ const Mainheader = () => {
         <Header>
             <HeaderContainer>
                 <HeaderLogo to='/'>
-                    EatUp
+                    YumTrip
                 </HeaderLogo>
             </HeaderContainer>
         </Header>
