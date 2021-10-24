@@ -7,6 +7,7 @@ import SigninPage from "./pages/signin";
 import SignupPage from "./pages/signup.js";
 import Menu from "./pages/menu";
 import Admin from "./pages/admin"
+import Error from "./pages/404.js"
 
 const Frontend = () => {
   return (
@@ -17,6 +18,7 @@ const Frontend = () => {
         <Route path="/signup" component={SignupPage} exact />
         <Route path="/store/" component={Menu} />
         <Route path="/admin/" component={Admin} />
+        <Route path="/404" component={Error} />
       </Switch>
     </Router>
   );
