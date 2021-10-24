@@ -230,3 +230,16 @@ app.post("/adminItemEdit", async function (req, res) {
     res.json({ bool: true });
   }
 });
+
+app.post("/neworder", async function (req, res) {
+  var obj = req.body;
+  db.collection("Orders").insertOne({
+    key: obj.key,
+    name: obj.name,
+    email: obj.email,
+    ph: obj.ph,
+    items: obj.items,
+    active: true,
+    completed: false,
+  });
+});

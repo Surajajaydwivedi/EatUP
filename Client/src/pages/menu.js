@@ -128,8 +128,11 @@ function App() {
       var x = await axios.post("http://localhost:5000/GetItemsForUser", {
         key: storeid,
       });
-      
-      updatedata(x.data);
+      if(x.data.bool===true){
+      updatedata(x.data);}
+      else{
+        window.open("http://localhost:3000/404","_self")
+      }
     }
     op();
   }, []);
@@ -202,6 +205,7 @@ function App() {
         </Toolbar>
       </AppBar>
       <Cart />
+
       {data &&
         data.items.map((dish) => (
           <Container maxWidth="xl" className={classes.menu}>

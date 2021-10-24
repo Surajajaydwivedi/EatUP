@@ -4,6 +4,8 @@ import Currorder from "../components/Admin/CurrentOrders/Admincurrorders";
 import AdminMenu from "../components/Admin/MenuManager/Adminmenu";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import CropFreeIcon from "@material-ui/icons/CropFree";
+import HistoryIcon from '@material-ui/icons/History';
+import AlarmIcon from '@material-ui/icons/Alarm';
 import { Route, Switch } from "react-router-dom";
 
 import {
@@ -120,18 +122,18 @@ export default function App(props) {
       onClick: () => history.push("/admin/dashboard"),
     },
     {
-      text: "Current Orders",
-      icon: <RestaurantMenuIcon style={{ color: "#FFFBFC" }} />,
-      onClick: () => history.push("/admin/currentorders"),
+      text: "Active Orders",
+      icon: <AlarmIcon style={{ color: "#FFFBFC" }} />,
+      onClick: () => history.push("/admin/activeorders"),
     },
     {
-      text: "Previous Orders",
-      icon: <ReceiptIcon style={{ color: "#FFFBFC" }} />,
-      onClick: () => history.push("/admin/prevorders"),
+      text: "Inactive Orders",
+      icon: <HistoryIcon style={{ color: "#FFFBFC" }} />,
+      onClick: () => history.push("/admin/inactiveorders"),
     },
     {
       text: "Menu Manager",
-      icon: <MenuBookIcon style={{ color: "#FFFBFC" }} />,
+      icon: <ReceiptIcon style={{ color: "#FFFBFC" }} />,
       onClick: () => history.push("/admin/menu"),
     },
     {
@@ -213,7 +215,7 @@ export default function App(props) {
           <Route path="/admin/dashboard">
             <Dashboard />
           </Route>
-          <Route path="/admin/currentorders">
+          <Route path="/admin/activeorders">
             <Currorder />
           </Route>
           <Route path="/admin/menu">

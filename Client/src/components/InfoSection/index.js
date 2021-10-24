@@ -90,7 +90,7 @@ const Navbar = ({ toggle }) => {
       <Nav scrollNav={scrollNav}>
         <NavbarContainer>
           <NavLogo to="/" onClick={toggleHome}>
-            EatUp
+            YumTrip
           </NavLogo>
           <MobileIcon onClick={toggle}>
             <FaBars />
@@ -188,7 +188,7 @@ const Banner = () => {
         <VideoBg autoPlay loop muted src={Video} type="video/mp4" />
       </BannerBg>
       <BannerContent>
-        <BannerH1>ASDFGHJK</BannerH1>
+        <BannerH1>YumTrip</BannerH1>
         <BannerP>1234567</BannerP>
         <SearchBar/>
       </BannerContent>
@@ -293,7 +293,7 @@ const Footer = () => {
     <FooterContainer>
       <FooterWrap>
         <FooterLinkTitle to="/" onClick={toggleHome}>
-          EatUp
+          YumTrip
         </FooterLinkTitle>
         <FooterLinkSubtitle>
           Get tools that grow your business

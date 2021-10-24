@@ -39,9 +39,9 @@ function App(props) {
       type: "image/jpeg",
       quality: 0.5,
       level: "M",
-      margin: 3,
+      margin: 2,
       scale: 4,
-      width: 400,
+      width: 300,
       color: {
         dark: "#3FDE82",
         light: "#0D1B2A",

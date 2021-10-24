@@ -203,7 +203,7 @@ const useStyles = makeStyles((theme) => ({
   },
   instructions: {
     marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
+    marginBottom: "45px",
   },
   mainbutton: {
     marginTop: "15px",
@@ -224,7 +224,11 @@ function App(props) {
   const [popup, setPopup] = React.useState(false);
   const [activeStep, setActiveStep] = React.useState(0);
   const [session, updatesession] = React.useState(0);
+  const [validemail, updatevalidemail] = useState(false);
   const [data, updatedata] = React.useState(false);
+  const [name, updateName] = React.useState("");
+  const [email, updateEmail] = React.useState("");
+  const [table, updateTable] = React.useState("");
   const storeid = props.storeid;
   var orderitmes = [];
   var rows = [];
@@ -277,6 +281,25 @@ function App(props) {
   }
   orderitmes.push({ name: "Total", quantity: "=", price: totalprice });
 
+  function handleNameChange(event) {
+    updateName(event.target.value);
+  }
+  function handleEmailChange(event) {
+    var x = event.target.value;
+    if (!x.includes(".com") || !x.includes("@")) {
+      updatevalidemail(false);
+    } else {
+      updatevalidemail(true);
+    }
+    updateEmail(x);
+  }
+  function handleTableChange(event) {
+    updateTable(event.target.value);
+  }
+  function handlePh(event) {
+    updateph(document.getElementById("phonenumber").value);
+  }
+
   function getStepContent(step) {
     switch (step) {
       case 0:
@@ -290,13 +313,16 @@ function App(props) {
               type="text"
               fullWidth
               required
+              onChange={handleNameChange}
             />
             <MuiPhoneNumber
+              id="phonenumber"
               name="phone"
               label="Phone Number"
               data-cy="user-phone"
               defaultCountry={"in"}
               required
+              onChange={handlePh}
             />
             <TextField
               autoFocus
@@ -306,6 +332,7 @@ function App(props) {
               type="email"
               fullWidth
               required
+              onChange={handleEmailChange}
             />
             <TextField
               autoFocus
@@ -315,6 +342,7 @@ function App(props) {
               type="number"
               fullWidth
               placeholder="Leave this emplty if you are not at restaurant right now."
+              onChange={handleTableChange}
             />
           </DialogContent>
         );
@@ -355,8 +383,34 @@ function App(props) {
 
   const steps = getSteps();
 
+  function allgood() {
+    if (name === "" || email.length <= 5 || !validemail || ph.length < 11)
+      return false;
+  }
+  async function sendorder() {
+    orderitmes.pop();
+    sessionStorage.setItem("food", "");
+    await axios.post("http://localhost:5000/neworder", {
+      key: storeid,
+      name: name,
+      email: email,
+      ph: ph,
+      items: orderitmes,
+    });
+  }
+
   const handleNext = () => {
+    if (activeStep === 0) {
+      if (allgood() === false) {
+        return;
+      }
+    } else if (activeStep === 1) {
+      sendorder();
+    }
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    if (activeStep === 1) {
+      window.location.reload();
+    }
   };
 
   const handleBack = () => {
@@ -367,9 +421,6 @@ function App(props) {
     setActiveStep(0);
   };
 
-  const handlePh = (value) => {
-    updateph(value);
-  };
   const handleClickOpen = () => {
     setPopup(true);
   };
@@ -412,11 +463,9 @@ function App(props) {
           {activeStep === steps.length ? (
             <div>
               <Typography className={classes.instructions}>
-                All steps completed - you&apos;re finished
+                Your Order is placed !
               </Typography>
-              <Button onClick={handleReset} className={classes.button}>
-                Reset
-              </Button>
+              <Button onClick={handleClose}>Close</Button>
             </div>
           ) : (
             <div>

@@ -34,8 +34,8 @@ export default function StickyFooter() {
       <footer className={classes.footer}>
         <Container>
           <Typography variant="body1" className={classes.copyright}>
-            An EatUP Product. <br />
-            {"© EatUP "}
+            A YumTrip Product. <br />
+            {"© YumTrip "}
             {new Date().getFullYear()}
           </Typography>
         </Container>

@@ -32,8 +32,7 @@ function insert(data) {
     itmes: data.items,
   };
 
-  return [data2,data1,data3,data4,dataitem]
-  
+  return [data2, data1, data3, data4, dataitem];
 }
 
 function currtime() {
@@ -42,5 +41,10 @@ function currtime() {
   return n;
 }
 
+function todaysdate() {
+  var d = new Date();
+  var n = d.getDate() + "/" + d.getMonth() + "/" + d.getFullYear();
+  return n;
+}
 
-module.exports = { insert,currtime };
+module.exports = { insert, currtime, todaysdate };

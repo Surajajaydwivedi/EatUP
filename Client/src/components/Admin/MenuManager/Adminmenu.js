@@ -120,14 +120,14 @@ function App() {
       var x = await axios.post("http://localhost:5000/GetItemsForMenuManager", {
         session: sessionStorage.getItem("SESS"),
       });
-      
-      updatedata(x.data);
+      if (x.data.bool === true) {
+        updatedata(x.data);
+      }
     }
     op();
   }, []);
   return (
     <>
-
       <Container maxWidth="xl" className={classes.menu}>
         <Grid item xl={1}>
           <Card className={classes.root}>
@@ -138,13 +138,21 @@ function App() {
                 </Typography>
               </CardContent>
               <div className={classes.controls}>
-              <ItemAddition />
+                <ItemAddition />
               </div>
             </div>
           </Card>
         </Grid>
       </Container>
-      
+      {data ? (
+        ""
+      ) : (
+        <Container maxWidth="sm" className={classes.menu}>
+          <Typography component="h6" variant="h6">
+            Looks like you have not added any items to your menu.
+          </Typography>
+        </Container>
+      )}
       {data &&
         data.items.map((dishh) => (
           <AdminMenuItesm
@@ -154,7 +162,6 @@ function App() {
             available={dishh.available}
           />
         ))}
-        
     </>
   );
 }
