@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import Card from "@material-ui/core/Card";
@@ -25,6 +25,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import DoneIcon from "@material-ui/icons/Done";
 import ClearIcon from "@material-ui/icons/Clear";
 import Orders from "./AdminOrders";
+const axios = require("axios");
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -55,15 +56,18 @@ const useStyles = makeStyles((theme) => ({
 
 export default function RecipeReviewCard() {
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(false);
-  const [expandT, setexpandT] = React.useState([false, false]);
+  const [data, updatedata] = useState(false);
 
-  const handleExpandClick = (val) => {
-    var temp = expandT;
-    temp[val] = true;
-
-    setexpandT(temp);
-  };
+  useEffect(() => {
+    async function op() {
+      var x = await axios.post("http://localhost:5000/GetActiveOrders", {
+        session: sessionStorage.getItem("SESS"),
+      });
+      
+      updatedata(x.data);
+    }
+    op();
+  }, []);
 
   return (
     <>

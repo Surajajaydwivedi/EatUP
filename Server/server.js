@@ -243,3 +243,23 @@ app.post("/neworder", async function (req, res) {
     completed: false,
   });
 });
+
+app.post("/GetActiveOrders", async function (req, res) {
+  console.log("fasdfasdfasd");
+  var obj = req.body;
+  const sessdetails = await validatesessions(obj.session);
+  if (sessdetails == false) {
+    res.json({
+      bool: false,
+    });
+    return;
+  }
+  console.log(sessdetails.key);
+  var xx = await db
+    .collection("Orders")
+    .find({ key: sessdetails.key, active: true },'name email' , function (err, docs) {
+      console.log(docs);
+    });
+
+  
+});

@@ -238,7 +238,6 @@ function App(props) {
       var x = await axios.post("http://localhost:5000/GetItemsForUser", {
         key: storeid,
       });
-      console.log(x.data);
       updatedata(x.data);
     }
     op();
