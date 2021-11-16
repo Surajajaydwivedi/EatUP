@@ -126,9 +126,9 @@ export default function App(props) {
       onClick: () => history.push("/admin/activeorders"),
     },
     {
-      text: "Inactive Orders",
+      text: "All Orders",
       icon: <HistoryIcon style={{ color: "#FFFBFC" }} />,
-      onClick: () => history.push("/admin/inactiveorders"),
+      onClick: () => history.push("/admin/allorders"),
     },
     {
       text: "Menu Manager",

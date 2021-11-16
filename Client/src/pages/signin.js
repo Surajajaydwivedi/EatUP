@@ -24,7 +24,7 @@ import axios from "axios";
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
-const delay = ms => new Promise(res => setTimeout(res, ms));
+const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -80,7 +80,7 @@ export default function SignIn() {
     var x = document.getElementById("email").value;
     UpdateEnteredEmail(x);
   }
-  
+
   async function validate() {
     var data = {
       email: enteredEmail,
@@ -96,8 +96,8 @@ export default function SignIn() {
       updatemsg("Success! Redirecting.");
       handleClick();
       sessionStorage.setItem("SESS", resp.data.session);
-      await delay(5000);
-      window.open("/admin/dashboard","_self");
+      await delay(2000);
+      window.open("/admin/dashboard", "_self");
     }
   }
 

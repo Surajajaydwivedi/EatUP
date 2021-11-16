@@ -233,19 +233,50 @@ app.post("/adminItemEdit", async function (req, res) {
 
 app.post("/neworder", async function (req, res) {
   var obj = req.body;
-  db.collection("Orders").insertOne({
-    key: obj.key,
-    name: obj.name,
-    email: obj.email,
-    ph: obj.ph,
-    items: obj.items,
-    active: true,
-    completed: false,
-  });
+  let Orderlist = await db.collection("Orders").findOne({ key: obj.key });
+  if (Orderlist) {
+    Updatedlist = Orderlist.Orders;
+
+    Updatedlist.push({
+      time: hp.formatAMPM(new Date()),
+      orderno: Orderlist.totalOrders + 1,
+      name: obj.name,
+      email: obj.email,
+      ph: obj.ph,
+      items: obj.items,
+      active: true,
+      completed: false,
+    });
+
+    db.collection("Orders").updateOne(
+      { key: obj.key },
+      {
+        $set: { totalOrders: Orderlist.totalOrders + 1, Orders: Updatedlist },
+      }
+    );
+  } else {
+    let Orderlist = [];
+    Orderlist.push({
+      time: hp.formatAMPM(new Date()),
+      orderno: 1,
+      name: obj.name,
+      email: obj.email,
+      ph: obj.ph,
+      items: obj.items,
+      active: true,
+      completed: false,
+    });
+
+    db.collection("Orders").insertOne({
+      key: obj.key,
+      totalOrders: 1,
+      Orders: Orderlist,
+      inactiveOrders: []
+    });
+  }
 });
 
 app.post("/GetActiveOrders", async function (req, res) {
-  console.log("fasdfasdfasd");
   var obj = req.body;
   const sessdetails = await validatesessions(obj.session);
   if (sessdetails == false) {
@@ -254,12 +285,9 @@ app.post("/GetActiveOrders", async function (req, res) {
     });
     return;
   }
-  console.log(sessdetails.key);
-  var xx = await db
-    .collection("Orders")
-    .find({ key: sessdetails.key, active: true },'name email' , function (err, docs) {
-      console.log(docs);
-    });
+  var xx = await db.collection("Orders").findOne({ key: sessdetails.key });
 
-  
+  res.json({
+    items: xx.Orders,
+  });
 });

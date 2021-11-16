@@ -51,11 +51,52 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "-10px",
   },
 }));
+function parseTime(s) {
+  var c = s.split(":");
+  return parseInt(c[0]) * 60 + parseInt(c[1]);
+}
+function formatAMPM(date) {
+  var hours = date.getHours();
+  var minutes = date.getMinutes();
+  var ampm = hours >= 12 ? "PM" : "AM";
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  minutes = minutes < 10 ? "0" + minutes : minutes;
+  var strTime = hours + ":" + minutes + " " + ampm;
+  return strTime;
+}
 
-export default function RecipeReviewCard(props) {
+export default function RecipeReviewCard(orderdetails) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
   const [expandT, setexpandT] = React.useState([false, false]);
+  const [Time, updateTime] = React.useState("...");
+  const [timeColor, updateTimeColor] = React.useState("");
+
+  function timeupdater() {
+    var Currtime = formatAMPM(new Date());
+    var StartTime = orderdetails.time;
+    var EndTIme = Currtime;
+    var minutes = parseTime(EndTIme) - parseTime(StartTime);
+    if (minutes > 60) {
+      updateTimeColor("error");
+      updateTime("1+ Hr");
+    } else {
+      if (minutes < 30) {
+        updateTimeColor("");
+      } else {
+        updateTimeColor("error");
+      }
+      updateTime(minutes + " Mins");
+    }
+  }
+  setInterval(function () {
+    timeupdater();
+  }, 30000);
+
+  React.useEffect(() => {
+    timeupdater();
+  }, []);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -67,7 +108,7 @@ export default function RecipeReviewCard(props) {
         <CardHeader
           avatar={
             <Avatar aria-label="recipe" backgroundColor="blue">
-              {props.title}
+              {orderdetails.orderno}
             </Avatar>
           }
           action={
@@ -75,34 +116,49 @@ export default function RecipeReviewCard(props) {
               <MoreVertIcon />
             </IconButton>
           }
-          title="Order No: 23452"
-          subheader="10:25 PM, Today"
+          title={"Order No: " + orderdetails.orderno}
+          subheader={orderdetails.time}
         />
 
         <CardContent>
+          <Typography
+            variant="subtitle2"
+            color="textSecondary"
+            component="p"
+            display="inline"
+            style={{ marginRight: 6 }}
+          >
+            Time Elapsed :
+          </Typography>
+
+          <Typography
+            variant="subtitle2"
+            component="p"
+            color={timeColor}
+            display="inline"
+          >
+            {Time}
+          </Typography>
           <Typography variant="subtitle2" color="textSecondary" component="p">
             Dine In
           </Typography>
           <List className={classes.itemlist}>
-            <ListItem>
-              <ListItemText primary="Chole Bhature" />
-              <ListItemSecondaryAction>
-                <h4>X2</h4>
-              </ListItemSecondaryAction>
-            </ListItem>
-            <ListItem>
-              <ListItemText primary="Chana Masala" />
-              <ListItemSecondaryAction>
-                <h4>X5</h4>
-              </ListItemSecondaryAction>
-            </ListItem>
+            {orderdetails.items &&
+              orderdetails.items.map((order) => (
+                <ListItem>
+                  <ListItemText primary={order.name} />
+                  <ListItemSecondaryAction>
+                    <h4>X {order.quantity}</h4>
+                  </ListItemSecondaryAction>
+                </ListItem>
+              ))}
           </List>
         </CardContent>
         <CardActions disableSpacing>
-          <IconButton aria-label="add to favorites">
-            <DoneIcon />
+          <IconButton>
+            <DoneIcon onClick={handleExpandClick} />
           </IconButton>
-          <IconButton aria-label="share">
+          <IconButton>
             <ClearIcon />
           </IconButton>
           <IconButton
@@ -118,11 +174,11 @@ export default function RecipeReviewCard(props) {
         </CardActions>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
-            <Typography h6>Table No: 22</Typography>
-            <Typography h6>Name : Umessi</Typography>
-            <Typography paragraph>Other Details :</Typography>
-            <Typography h6>Ph : 9999999999</Typography>
-            <Typography h6>Email : Opbolte@gmail.com</Typography>
+            <Typography h6>Table No: {orderdetails.tableno}</Typography>
+            <Typography h6>Name : {orderdetails.name}</Typography>
+            <Typography paragraph>Other Details : N/A</Typography>
+            <Typography h6>Ph : {orderdetails.ph}</Typography>
+            <Typography h6>Email : {orderdetails.email}</Typography>
           </CardContent>
         </Collapse>
       </Card>

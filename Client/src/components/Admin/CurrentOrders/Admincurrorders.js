@@ -63,8 +63,7 @@ export default function RecipeReviewCard() {
       var x = await axios.post("http://localhost:5000/GetActiveOrders", {
         session: sessionStorage.getItem("SESS"),
       });
-      
-      updatedata(x.data);
+      updatedata(x.data.items);
     }
     op();
   }, []);
@@ -72,15 +71,11 @@ export default function RecipeReviewCard() {
   return (
     <>
       <Grid container spacing={3}>
-        <Grid item xl={6}>
-          <Orders />
+        {data && data.map((order)=>(
+          <Grid item xl={6}>
+          <Orders name={order.name} email={order.email} ph = {order.ph} items={order.items} active={order.active} completed = {order.completed} time={order.time} orderno={order.orderno} />
         </Grid>
-        <Grid item xl={6}>
-          <Orders />
-        </Grid>
-        <Grid item xl={6}>
-          <Orders title="DI" />
-        </Grid>
+        ))}
       </Grid>
     </>
   );
