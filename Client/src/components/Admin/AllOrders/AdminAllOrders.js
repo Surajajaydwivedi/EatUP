@@ -24,7 +24,7 @@ import ListItem from "@material-ui/core/ListItem";
 import Checkbox from "@material-ui/core/Checkbox";
 import DoneIcon from "@material-ui/icons/Done";
 import ClearIcon from "@material-ui/icons/Clear";
-import Orders from "./AdminOrders";
+import Orders from "./OrderComponent";
 const axios = require("axios");
 
 const useStyles = makeStyles((theme) => ({
@@ -53,7 +53,11 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "-10px",
   },
 }));
-
+function todaysdate() {
+  var d = new Date();
+  var n = d.getDate() + "/" + d.getMonth() + "/" + d.getFullYear();
+  return n;
+}
 export default function RecipeReviewCard() {
   const classes = useStyles();
   const [data, updatedata] = useState(false);
@@ -62,7 +66,7 @@ export default function RecipeReviewCard() {
     async function op() {
       var x = await axios.post("http://localhost:5000/GetActiveOrders", {
         session: sessionStorage.getItem("SESS"),
-        type: "active",
+        type: "All",
       });
       updatedata(x.data.items);
     }
@@ -73,30 +77,25 @@ export default function RecipeReviewCard() {
     <>
       <Grid container spacing={3}>
         {data &&
-          data.map((order) => (
-            <Grid item xl={6}>
-              <Orders
-                name={order.name}
-                email={order.email}
-                ph={order.ph}
-                items={order.items}
-                active={order.active}
-                completed={order.completed}
-                time={order.time}
-                orderno={order.orderno}
-                date = {order.date}
-              />
-            </Grid>
-          ))}
-        {data === false || data.length === 0 ? (
-          <Container maxWidth="sm" className={classes.menu}>
-            <Typography component="h6" variant="h6">
-              Looks like you do not have any active orders correctly.
-            </Typography>
-          </Container>
-        ) : (
-          <></>
-        )}
+          data.map((order) =>
+            order.date !== todaysdate() || order.active=== false ? (
+              <Grid item xl={6}>
+                <Orders
+                  name={order.name}
+                  email={order.email}
+                  ph={order.ph}
+                  items={order.items}
+                  active={order.active}
+                  completed={order.completed}
+                  time={order.time}
+                  orderno={order.orderno}
+                  date = {order.date}
+                />
+              </Grid>
+            ) : (
+              <></>
+            )
+          )}
       </Grid>
     </>
   );

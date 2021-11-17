@@ -1,5 +1,6 @@
 import React from "react";
 import Currorder from "../components/Admin/CurrentOrders/Admincurrorders";
+import Allorder from "../components/Admin/AllOrders/AdminAllOrders";
 import AdminMenu from "../components/Admin/MenuManager/Adminmenu";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import CropFreeIcon from "@material-ui/icons/CropFree";
@@ -216,6 +217,9 @@ export default function App(props) {
           </Route>
           <Route path="/admin/activeorders">
             <Currorder />
+          </Route>
+          <Route path="/admin/allorders">
+            <Allorder />
           </Route>
           <Route path="/admin/menu">
             <AdminMenu />

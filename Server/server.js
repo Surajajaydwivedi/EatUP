@@ -239,6 +239,7 @@ app.post("/neworder", async function (req, res) {
 
     Updatedlist.push({
       time: hp.formatAMPM(new Date()),
+      date: hp.todaysdate(),
       orderno: Orderlist.totalOrders + 1,
       name: obj.name,
       email: obj.email,
@@ -258,6 +259,7 @@ app.post("/neworder", async function (req, res) {
     let Orderlist = [];
     Orderlist.push({
       time: hp.formatAMPM(new Date()),
+      date: hp.todaysdate(),
       orderno: 1,
       name: obj.name,
       email: obj.email,
@@ -271,7 +273,7 @@ app.post("/neworder", async function (req, res) {
       key: obj.key,
       totalOrders: 1,
       Orders: Orderlist,
-      inactiveOrders: []
+      inactiveOrders: [],
     });
   }
 });
@@ -286,8 +288,49 @@ app.post("/GetActiveOrders", async function (req, res) {
     return;
   }
   var xx = await db.collection("Orders").findOne({ key: sessdetails.key });
-
+  if(obj.type == "All"){
+    res.json({
+      items: [].concat(xx.Orders, xx.inactiveOrders),
+    });
+    return
+  }
   res.json({
     items: xx.Orders,
+  });
+});
+
+app.post("/UpdateOrders", async function (req, res) {
+  console.log("fasdf");
+  var obj = req.body;
+  const sessdetails = await validatesessions(obj.session);
+  if (sessdetails == false) {
+    res.json({
+      bool: false,
+    });
+    return;
+  }
+  var xx = await db.collection("Orders").findOne({ key: sessdetails.key });
+  var orderlist = xx.Orders;
+  var inactiveorderlist = xx.inactiveOrders;
+  for (let i = 0; i < orderlist.length; i++) {
+    if (orderlist[i].orderno === obj.orderno) {
+      if (obj.type === "Complete") {
+        orderlist[i].completed = true;
+      }
+      orderlist[i].active = false;
+      inactiveorderlist.push(orderlist[i]);
+      orderlist.splice(i, 1);
+      break;
+    }
+    
+  }
+  db.collection("Orders").updateOne(
+    { key: sessdetails.key },
+    {
+      $set: { Orders: orderlist, inactiveOrders: inactiveorderlist },
+    }
+  );
+  res.json({
+    bool: true,
   });
 });

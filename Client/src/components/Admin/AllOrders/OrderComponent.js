@@ -9,7 +9,7 @@ import CardActions from "@material-ui/core/CardActions";
 import Collapse from "@material-ui/core/Collapse";
 import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
-import { Container, Grid, TableHead } from "@material-ui/core";
+import { Container, Grid } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import { red } from "@material-ui/core/colors";
 import FavoriteIcon from "@material-ui/icons/Favorite";
@@ -56,11 +56,6 @@ function parseTime(s) {
   var c = s.split(":");
   return parseInt(c[0]) * 60 + parseInt(c[1]);
 }
-function todaysdate() {
-  var d = new Date();
-  var n = d.getDate() + "/" + d.getMonth() + "/" + d.getFullYear();
-  return n;
-}
 function formatAMPM(date) {
   var hours = date.getHours();
   var minutes = date.getMinutes();
@@ -75,60 +70,7 @@ function formatAMPM(date) {
 export default function RecipeReviewCard(orderdetails) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
-  const [Time, updateTime] = React.useState("...");
-  const [timeColor, updateTimeColor] = React.useState("");
 
-  function timeupdater() {
-    var Currtime = formatAMPM(new Date());
-    var StartTime = orderdetails.time;
-    var EndTIme = Currtime;
-    var minutes = parseTime(EndTIme) - parseTime(StartTime);
-    if(orderdetails.date !== todaysdate()){
-      console.log(orderdetails.date, todaysdate())
-      updateTimeColor("error");
-      updateTime("1+ Day");
-      return
-    }
-    if (minutes > 60) {
-      updateTimeColor("error");
-      updateTime("1+ Hr");
-    } else {
-      if (minutes < 30) {
-        updateTimeColor("");
-      } else {
-        updateTimeColor("error");
-      }
-      updateTime(minutes + " Mins");
-    }
-  }
-  setInterval(function () {
-    timeupdater();
-  }, 30000);
-
-  React.useEffect(() => {
-    timeupdater();
-  }, []);
-
-  async function handleComplete (){
-    let x = await axios.post("http://localhost:5000/UpdateOrders", {
-        session: sessionStorage.getItem("SESS"),
-        type: "Complete",
-        orderno: orderdetails.orderno,
-      });
-    if(x.bool){
-      window.location.reload();
-    }
-  }
-  async function handleCancel (){
-    let x = await axios.post("http://localhost:5000/UpdateOrders", {
-        session: sessionStorage.getItem("SESS"),
-        type: "Cancel",
-        orderno: orderdetails.orderno,
-      });
-      if(x.bool){
-        window.location.reload();
-      }
-  }
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -138,16 +80,17 @@ export default function RecipeReviewCard(orderdetails) {
     <>
       <Card className={classes.root}>
         <CardHeader
+        
           avatar={
-            <Avatar aria-label="recipe" backgroundColor="blue">
-              {orderdetails.orderno}
-            </Avatar>
+            orderdetails.completed === true ? (
+            <Avatar  >
+                ✅
+            </Avatar> ) : (
+            <Avatar  >
+                ❌
+            </Avatar> )
           }
-          action={
-            <IconButton aria-label="settings">
-              <MoreVertIcon />
-            </IconButton>
-          }
+          
           title={"Order No: " + orderdetails.orderno}
           subheader={orderdetails.time}
         />
@@ -160,16 +103,15 @@ export default function RecipeReviewCard(orderdetails) {
             display="inline"
             style={{ marginRight: 6 }}
           >
-            Time Elapsed :
+            Date :
           </Typography>
 
           <Typography
             variant="subtitle2"
             component="p"
-            color={timeColor}
             display="inline"
           >
-            {Time}
+            {orderdetails.date}
           </Typography>
           <Typography variant="subtitle2" color="textSecondary" component="p">
             Dine In
@@ -187,12 +129,7 @@ export default function RecipeReviewCard(orderdetails) {
           </List>
         </CardContent>
         <CardActions disableSpacing>
-          <IconButton>
-            <DoneIcon onClick={handleComplete} />
-          </IconButton>
-          <IconButton>
-            <ClearIcon onClick={handleCancel} />
-          </IconButton>
+          
           <IconButton
             className={clsx(classes.expand, {
               [classes.expandOpen]: expanded,
