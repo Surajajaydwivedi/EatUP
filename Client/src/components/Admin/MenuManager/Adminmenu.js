@@ -12,6 +12,8 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import MenuIcon from "@material-ui/icons/Menu";
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import SearchIcon from "@material-ui/icons/Search";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MailIcon from "@material-ui/icons/Mail";
@@ -112,22 +114,34 @@ function App() {
   const classes = useStyles();
   const [data, updatedata] = useState(null);
   const [itemadder, updateitemadder] = useState(false);
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
   function varupdater() {
     updateitemadder(true);
   }
   useEffect(() => {
     async function op() {
+      handleOpen()
       var x = await axios.post("http://localhost:5000/GetItemsForMenuManager", {
         session: sessionStorage.getItem("SESS"),
       });
       if (x.data.bool === true) {
         updatedata(x.data);
       }
+      handleClose()
     }
     op();
   }, []);
   return (
     <>
+    <Backdrop className={classes.backdrop} open={open} >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <Container maxWidth="xl" className={classes.menu}>
         <Grid item xl={1}>
           <Card className={classes.root}>
@@ -144,14 +158,15 @@ function App() {
           </Card>
         </Grid>
       </Container>
-      {data ? (
-        ""
-      ) : (
+      
+      {data===true && data.length===0 ? (
         <Container maxWidth="sm" className={classes.menu}>
           <Typography component="h6" variant="h6">
             Looks like you have not added any items to your menu.
           </Typography>
         </Container>
+      ) : (
+        ""
       )}
       {data &&
         data.items.map((dishh) => (

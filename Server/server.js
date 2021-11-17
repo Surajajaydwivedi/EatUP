@@ -245,6 +245,8 @@ app.post("/neworder", async function (req, res) {
       email: obj.email,
       ph: obj.ph,
       items: obj.items,
+      cost : obj.cost,
+      tableno : obj.tableno,
       active: true,
       completed: false,
     });
@@ -265,6 +267,8 @@ app.post("/neworder", async function (req, res) {
       email: obj.email,
       ph: obj.ph,
       items: obj.items,
+      cost : obj.cost,
+      tableno : obj.tableno,
       active: true,
       completed: false,
     });

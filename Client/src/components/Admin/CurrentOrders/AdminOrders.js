@@ -83,11 +83,11 @@ export default function RecipeReviewCard(orderdetails) {
     var StartTime = orderdetails.time;
     var EndTIme = Currtime;
     var minutes = parseTime(EndTIme) - parseTime(StartTime);
-    if(orderdetails.date !== todaysdate()){
-      console.log(orderdetails.date, todaysdate())
+    if (orderdetails.date !== todaysdate()) {
+      console.log(orderdetails.date, todaysdate());
       updateTimeColor("error");
       updateTime("1+ Day");
-      return
+      return;
     }
     if (minutes > 60) {
       updateTimeColor("error");
@@ -109,25 +109,25 @@ export default function RecipeReviewCard(orderdetails) {
     timeupdater();
   }, []);
 
-  async function handleComplete (){
+  async function handleComplete() {
     let x = await axios.post("http://localhost:5000/UpdateOrders", {
-        session: sessionStorage.getItem("SESS"),
-        type: "Complete",
-        orderno: orderdetails.orderno,
-      });
-    if(x.bool){
+      session: sessionStorage.getItem("SESS"),
+      type: "Complete",
+      orderno: orderdetails.orderno,
+    });
+    if (x.data.bool) {
       window.location.reload();
     }
   }
-  async function handleCancel (){
+  async function handleCancel() {
     let x = await axios.post("http://localhost:5000/UpdateOrders", {
-        session: sessionStorage.getItem("SESS"),
-        type: "Cancel",
-        orderno: orderdetails.orderno,
-      });
-      if(x.bool){
-        window.location.reload();
-      }
+      session: sessionStorage.getItem("SESS"),
+      type: "Cancel",
+      orderno: orderdetails.orderno,
+    });
+    if (x.data.bool) {
+      window.location.reload();
+    }
   }
 
   const handleExpandClick = () => {
@@ -171,8 +171,24 @@ export default function RecipeReviewCard(orderdetails) {
           >
             {Time}
           </Typography>
+          <Typography display="block"></Typography>
+
+          <Typography
+            variant="subtitle2"
+            color="textSecondary"
+            component="p"
+            display="inline"
+            style={{ marginRight: 6 }}
+          >
+            Cost :
+          </Typography>
+
+          <Typography variant="subtitle2" component="p" display="inline">
+            {orderdetails.cost} ₹
+          </Typography>
+
           <Typography variant="subtitle2" color="textSecondary" component="p">
-            Dine In
+          {orderdetails.tableno ? "Dine In" : "Take Away"}
           </Typography>
           <List className={classes.itemlist}>
             {orderdetails.items &&

@@ -9,6 +9,8 @@ import CardActions from "@material-ui/core/CardActions";
 import Collapse from "@material-ui/core/Collapse";
 import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { Container, Grid } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import { red } from "@material-ui/core/colors";
@@ -57,20 +59,35 @@ const useStyles = makeStyles((theme) => ({
 export default function RecipeReviewCard() {
   const classes = useStyles();
   const [data, updatedata] = useState(false);
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   useEffect(() => {
     async function op() {
+      handleOpen()
       var x = await axios.post("http://localhost:5000/GetActiveOrders", {
         session: sessionStorage.getItem("SESS"),
         type: "active",
       });
       updatedata(x.data.items);
+      handleClose()
     }
+    
     op();
+    
   }, []);
 
   return (
     <>
+    <Backdrop className={classes.backdrop} open={open} >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+     <div>
       <Grid container spacing={3}>
         {data &&
           data.map((order) => (
@@ -85,10 +102,13 @@ export default function RecipeReviewCard() {
                 time={order.time}
                 orderno={order.orderno}
                 date = {order.date}
+                cost = {order.cost}
+                tableno = {order.tableno}
               />
             </Grid>
           ))}
-        {data === false || data.length === 0 ? (
+          
+        {data.length === 0 ? (
           <Container maxWidth="sm" className={classes.menu}>
             <Typography component="h6" variant="h6">
               Looks like you do not have any active orders correctly.
@@ -98,6 +118,8 @@ export default function RecipeReviewCard() {
           <></>
         )}
       </Grid>
+      </div>
+      
     </>
   );
 }

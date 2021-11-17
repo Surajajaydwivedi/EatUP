@@ -113,6 +113,21 @@ export default function RecipeReviewCard(orderdetails) {
           >
             {orderdetails.date}
           </Typography>
+          <Typography display="block"></Typography>
+
+          <Typography
+            variant="subtitle2"
+            color="textSecondary"
+            component="p"
+            display="inline"
+            style={{ marginRight: 6 }}
+          >
+            Cost :
+          </Typography>
+
+          <Typography variant="subtitle2" component="p" display="inline">
+            {orderdetails.cost} ₹
+          </Typography>
           <Typography variant="subtitle2" color="textSecondary" component="p">
             Dine In
           </Typography>

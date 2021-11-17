@@ -229,6 +229,7 @@ function App(props) {
   const [name, updateName] = React.useState("");
   const [email, updateEmail] = React.useState("");
   const [table, updateTable] = React.useState("");
+  var totalprice = 0;
   const storeid = props.storeid;
   var orderitmes = [];
   var rows = [];
@@ -254,7 +255,7 @@ function App(props) {
     };
     orderitmes.push(tt);
   }
-  var totalprice = 0;
+  
   var itemfromserver = [];
   if (data) {
     itemfromserver = data.items;
@@ -395,6 +396,8 @@ function App(props) {
       email: email,
       ph: ph,
       items: orderitmes,
+      cost : totalprice,
+      tableno: table,
     });
   }
 
