@@ -245,8 +245,8 @@ app.post("/neworder", async function (req, res) {
       email: obj.email,
       ph: obj.ph,
       items: obj.items,
-      cost : obj.cost,
-      tableno : obj.tableno,
+      cost: obj.cost,
+      tableno: obj.tableno,
       active: true,
       completed: false,
     });
@@ -267,8 +267,8 @@ app.post("/neworder", async function (req, res) {
       email: obj.email,
       ph: obj.ph,
       items: obj.items,
-      cost : obj.cost,
-      tableno : obj.tableno,
+      cost: obj.cost,
+      tableno: obj.tableno,
       active: true,
       completed: false,
     });
@@ -292,11 +292,11 @@ app.post("/GetActiveOrders", async function (req, res) {
     return;
   }
   var xx = await db.collection("Orders").findOne({ key: sessdetails.key });
-  if(obj.type == "All"){
+  if (obj.type == "All") {
     res.json({
       items: [].concat(xx.Orders, xx.inactiveOrders),
     });
-    return
+    return;
   }
   res.json({
     items: xx.Orders,
@@ -326,7 +326,6 @@ app.post("/UpdateOrders", async function (req, res) {
       orderlist.splice(i, 1);
       break;
     }
-    
   }
   db.collection("Orders").updateOne(
     { key: sessdetails.key },
@@ -336,5 +335,49 @@ app.post("/UpdateOrders", async function (req, res) {
   );
   res.json({
     bool: true,
+  });
+});
+
+app.post("/GetDasboardData", async function (req, res) {
+  var obj = req.body;
+  const sessdetails = await validatesessions(obj.session);
+  if (sessdetails == false) {
+    res.json({
+      bool: false,
+    });
+    return;
+  }
+
+  var xx = await db.collection("Orders").findOne({ key: sessdetails.key });
+  let allOrders = [].concat(xx.Orders, xx.inactiveOrders);
+  let returningData = [];
+  let Revenue = 0;
+  let todaysOrders = 0;
+  for (let i = 0; i < allOrders.length; i++) {
+    Revenue += allOrders[i].cost;
+    if (allOrders[i].date == hp.todaysdate()) {
+      todaysOrders += 1;
+    }
+    
+  }
+  returningData.push(Revenue);
+  returningData.push(todaysOrders);
+  returningData.push(xx.Orders.length);
+  var MenuItems = await db
+    .collection("Items")
+    .findOne({ key: sessdetails.key });
+  returningData.push(MenuItems.itmes.length);
+  allOrders.sort(function (m, n) {
+    return m.orderno - n.orderno;
+  });
+
+  if (allOrders.length <= 5) {
+    returningData.push(allOrders.reverse());
+  } else {
+    returningData.push(allOrders.reverse().slice(0, 5));
+  }
+  returningData.push(hp.last7days([].concat(xx.Orders, xx.inactiveOrders)))
+  res.json({
+    ret: returningData,
   });
 });

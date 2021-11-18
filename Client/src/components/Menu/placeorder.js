@@ -95,8 +95,8 @@ const useQontoStepIconStyles = makeStyles({
     zIndex: 1,
     fontSize: 18,
   },
-  inside: {
-    marginBottom: "100px",
+  mainbutton: {
+    marginBottom: "50px",
   },
 });
 
@@ -255,7 +255,7 @@ function App(props) {
     };
     orderitmes.push(tt);
   }
-  
+
   var itemfromserver = [];
   if (data) {
     itemfromserver = data.items;
@@ -396,7 +396,7 @@ function App(props) {
       email: email,
       ph: ph,
       items: orderitmes,
-      cost : totalprice,
+      cost: totalprice,
       tableno: table,
     });
   }

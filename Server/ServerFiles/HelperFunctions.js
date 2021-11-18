@@ -49,12 +49,42 @@ function todaysdate() {
 function formatAMPM(date) {
   var hours = date.getHours();
   var minutes = date.getMinutes();
-  var ampm = hours >= 12 ? 'PM' : 'AM';
+  var ampm = hours >= 12 ? "PM" : "AM";
   hours = hours % 12;
   hours = hours ? hours : 12; // the hour '0' should be '12'
-  minutes = minutes < 10 ? '0'+minutes : minutes;
-  var strTime = hours + ':' + minutes + ' ' + ampm;
+  minutes = minutes < 10 ? "0" + minutes : minutes;
+  var strTime = hours + ":" + minutes + " " + ampm;
   return strTime;
 }
-
-module.exports = { insert, currtime, todaysdate,formatAMPM };
+function ddmmyyTOmmddyy(date) {
+  var datearray = date.split("/");
+  var newdate = datearray[1] + "/" + datearray[0] + "/" + datearray[2];
+  return newdate;
+}
+function last7days(input) {
+  function rotate(k) {
+    let nums = ["Mon", "Tues", "Wed", "Thur", "Fri", "Sat", "Sun"];
+    k = k % nums.length;
+    nums.unshift(...nums.splice(nums.length - k, k));
+    return nums;
+  }
+  let week = rotate(new Date().getDay());
+  let arr = [0, 0, 0, 0, 0, 0, 0];
+  let today = ddmmyyTOmmddyy(todaysdate());
+  for (let i = 0; i < input.length; i++) {
+    let currdate = ddmmyyTOmmddyy(input[i].date);
+    let diff = (new Date(today) - new Date(currdate)) / (1000 * 60 * 60 * 24);
+    if (diff <= 7) {
+      arr[diff] += 1;
+    }
+  }
+  return [arr,week];
+}
+module.exports = {
+  insert,
+  currtime,
+  todaysdate,
+  formatAMPM,
+  ddmmyyTOmmddyy,
+  last7days,
+};

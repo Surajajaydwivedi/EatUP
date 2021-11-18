@@ -6,14 +6,14 @@ import { Typography } from "@material-ui/core";
 class App extends Component {
   constructor(props) {
     super(props);
-
+    
     this.state = {
       options: {
         chart: {
           id: "basic-bar",
         },
         xaxis: {
-          categories: ["Mon", "Tues", "Wed", "Thur", "Fri", "Sat", "Sun"],
+          categories: props.data[1],
         },
         fill: {
           colors: ['#0D1B2A', '#B32824']
@@ -22,7 +22,7 @@ class App extends Component {
       series: [
         {
           name: "Orders",
-          data: [8, 10, 8, 11, 12, 15, 18],
+          data:  props.data[0],
         },
       ],
     };

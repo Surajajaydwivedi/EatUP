@@ -52,10 +52,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "-10px",
   },
 }));
-function parseTime(s) {
-  var c = s.split(":");
-  return parseInt(c[0]) * 60 + parseInt(c[1]);
-}
+
 function todaysdate() {
   var d = new Date();
   var n = d.getDate() + "/" + d.getMonth() + "/" + d.getFullYear();
@@ -81,10 +78,12 @@ export default function RecipeReviewCard(orderdetails) {
   function timeupdater() {
     var Currtime = formatAMPM(new Date());
     var StartTime = orderdetails.time;
-    var EndTIme = Currtime;
-    var minutes = parseTime(EndTIme) - parseTime(StartTime);
+    var timeStart = new Date("18/11/2021 " + "5:00 AM");
+    var timeEnd = new Date("18/11/2021 " + "5:30 PM");
+    var diff = (timeEnd - timeStart) / 60000;
+    var minutes = diff % 60;
+    console.log(minutes);
     if (orderdetails.date !== todaysdate()) {
-      console.log(orderdetails.date, todaysdate());
       updateTimeColor("error");
       updateTime("1+ Day");
       return;
@@ -188,7 +187,7 @@ export default function RecipeReviewCard(orderdetails) {
           </Typography>
 
           <Typography variant="subtitle2" color="textSecondary" component="p">
-          {orderdetails.tableno ? "Dine In" : "Take Away"}
+            {orderdetails.tableno ? "Dine In" : "Take Away"}
           </Typography>
           <List className={classes.itemlist}>
             {orderdetails.items &&

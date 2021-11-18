@@ -82,12 +82,11 @@ const useStyles = makeStyles((theme) => ({
   dishname: {
     fontSize: "15px",
     flexGrow: 1,
-    
   },
   dishcount: {
     marginRight: "25px",
     marginLeft: "80px",
-    
+
     fontSize: "15px",
   },
   fname: {
@@ -113,6 +112,9 @@ const useStyles = makeStyles((theme) => ({
   },
   header: {
     backgroundColor: "#3FDE82",
+  },
+  plo: {
+    marginBottom: "25px",
   },
 }));
 
@@ -145,7 +147,7 @@ function App() {
       };
       tempobj.push(tt);
       tempcount += 1;
-      var priceextract = temp[i].split("/")[0]
+      var priceextract = temp[i].split("/")[0];
       temptotal = temptotal + parseInt(priceextract * temp[i + 1]);
     }
     setCount(tempcount);
@@ -177,7 +179,7 @@ function App() {
       };
       tempobj.push(tt);
       tempcount += 1;
-      var priceextract = temp[i].split("/")[0]
+      var priceextract = temp[i].split("/")[0];
       temptotal = temptotal + parseInt(priceextract * temp[i + 1]);
     }
     setCount(tempcount);
@@ -246,7 +248,7 @@ function App() {
                           X {dish.total}
                         </Typography>
                         <Typography variant="subtitle1" color="textSecondary">
-                          {(dish.price).split("/")[0]} ₹{"     "}
+                          {dish.price.split("/")[0]} ₹{"     "}
                         </Typography>
 
                         <Button
@@ -293,6 +295,7 @@ function App() {
         </Grid>
         <Divider />
         {itemcount && <PlaceOrder name={session} storeid={storeid} />}
+        <Divider className={classes.plo} />
       </Drawer>
     </>
   );
