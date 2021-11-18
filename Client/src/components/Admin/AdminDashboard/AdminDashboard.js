@@ -41,7 +41,7 @@ export default function App() {
     async function op() {
       handleOpen();
       var x = await axios.post("http://localhost:5000/GetDasboardData", {
-        session: sessionStorage.getItem("SESS"),
+        session: localStorage.getItem("SESS"),
       });
 
       updateData(x.data.ret);

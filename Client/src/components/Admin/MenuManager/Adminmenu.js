@@ -128,7 +128,7 @@ function App() {
     async function op() {
       handleOpen()
       var x = await axios.post("http://localhost:5000/GetItemsForMenuManager", {
-        session: sessionStorage.getItem("SESS"),
+        session: localStorage.getItem("SESS"),
       });
       if (x.data.bool === true) {
         updatedata(x.data);

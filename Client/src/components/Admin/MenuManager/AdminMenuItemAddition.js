@@ -95,7 +95,7 @@ export default function ResponsiveDialog() {
     if (allgood() === true) {
       setOpen(false);
       await axios.post("http://localhost:5000/adminItemEdit", {
-        session: sessionStorage.getItem("SESS"),
+        session: localStorage.getItem("SESS"),
         type: "addition",
         name: name,
         price: price,

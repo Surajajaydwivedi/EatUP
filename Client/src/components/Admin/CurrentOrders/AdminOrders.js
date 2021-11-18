@@ -87,7 +87,7 @@ export default function RecipeReviewCard(orderdetails) {
       updateTime("1+ Day");
       return;
     }
-    if (minutes > 60) {
+    if (diff > 60) {
       updateTimeColor("error");
       updateTime("1+ Hr");
     } else {
@@ -109,7 +109,7 @@ export default function RecipeReviewCard(orderdetails) {
 
   async function handleComplete() {
     let x = await axios.post("http://localhost:5000/UpdateOrders", {
-      session: sessionStorage.getItem("SESS"),
+      session: localStorage.getItem("SESS"),
       type: "Complete",
       orderno: orderdetails.orderno,
     });
@@ -119,7 +119,7 @@ export default function RecipeReviewCard(orderdetails) {
   }
   async function handleCancel() {
     let x = await axios.post("http://localhost:5000/UpdateOrders", {
-      session: sessionStorage.getItem("SESS"),
+      session: localStorage.getItem("SESS"),
       type: "Cancel",
       orderno: orderdetails.orderno,
     });

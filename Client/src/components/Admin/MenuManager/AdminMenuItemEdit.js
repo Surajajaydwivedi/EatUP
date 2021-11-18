@@ -97,7 +97,7 @@ export default function ResponsiveDialog(recieve) {
     if (allgood() === true) {
       setOpen(false);
       await axios.post("http://localhost:5000/adminItemEdit", {
-        session: sessionStorage.getItem("SESS"),
+        session: localStorage.getItem("SESS"),
         type: "edit",
         itemkey: recieve.keyy,
         name: name,
@@ -110,7 +110,7 @@ export default function ResponsiveDialog(recieve) {
   }
   async function deleteitem() {
     await axios.post("http://localhost:5000/adminItemEdit", {
-      session: sessionStorage.getItem("SESS"),
+      session: localStorage.getItem("SESS"),
       type: "delete",
       itemkey: recieve.keyy,
     });

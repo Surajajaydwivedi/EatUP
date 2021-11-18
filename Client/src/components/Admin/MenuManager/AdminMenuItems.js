@@ -132,7 +132,7 @@ function App(dish) {
 
     setLoading((prevLoading) => !prevLoading);
     const ret = await axios.post("http://localhost:5000/adminItemEdit", {
-      session: sessionStorage.getItem("SESS"),
+      session: localStorage.getItem("SESS"),
       type: "availability",
       change: !available,
       itemkey: key,

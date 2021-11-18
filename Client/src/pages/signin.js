@@ -95,7 +95,7 @@ export default function SignIn() {
       updatepn("success");
       updatemsg("Success! Redirecting.");
       handleClick();
-      sessionStorage.setItem("SESS", resp.data.session);
+      localStorage.setItem("SESS", resp.data.session);
       await delay(2000);
       window.open("/admin/dashboard", "_self");
     }

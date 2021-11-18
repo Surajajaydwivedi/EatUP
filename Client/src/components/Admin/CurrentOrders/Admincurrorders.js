@@ -71,7 +71,7 @@ export default function RecipeReviewCard() {
     async function op() {
       handleOpen()
       var x = await axios.post("http://localhost:5000/GetActiveOrders", {
-        session: sessionStorage.getItem("SESS"),
+        session: localStorage.getItem("SESS"),
         type: "active",
       });
       updatedata(x.data.items);
