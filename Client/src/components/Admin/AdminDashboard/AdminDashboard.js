@@ -1,11 +1,6 @@
 import React from "react";
 import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
@@ -17,10 +12,6 @@ import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import Orders from "./AdminDashboardOrders";
 import Chart from "./AdminDashboardChart";
-import Week from "./AdminDashboardCards";
-import TrendingDownIcon from "@material-ui/icons/TrendingDown";
-import TrendingUpIcon from "@material-ui/icons/TrendingUp";
-import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 const axios = require("axios");
 const useStyles = makeStyles({
   root: {
@@ -76,11 +67,18 @@ export default function App() {
                 Total Revenue
               </Typography>
               <Typography variant="h5" component="h2">
-                {data[0]} ₹
+                {data && data[0]} ₹
               </Typography>
             </CardContent>
             <CardActions>
-              <Button size="small">Learn More 📊</Button>{" "}
+              <Button
+                size="small"
+                onClick={() => {
+                  window.location = "allorders";
+                }}
+              >
+                Learn More 📊
+              </Button>
             </CardActions>
           </Card>
         </Grid>
@@ -95,11 +93,18 @@ export default function App() {
                 Today's Orders
               </Typography>
               <Typography variant="h5" component="h2">
-                {data[1]}
+                {data && data[1]}
               </Typography>
             </CardContent>
             <CardActions>
-              <Button size="small">Learn More </Button>{" "}
+              <Button
+                size="small"
+                onClick={() => {
+                  window.location = "allorders";
+                }}
+              >
+                Learn More{" "}
+              </Button>{" "}
             </CardActions>
           </Card>
         </Grid>
@@ -114,11 +119,18 @@ export default function App() {
                 Currently Active Orders
               </Typography>
               <Typography variant="h5" component="h2">
-                {data[2]}
+                {data && data[2]}
               </Typography>
             </CardContent>
             <CardActions>
-              <Button size="small">Track Orders 🟢</Button>{" "}
+              <Button
+                size="small"
+                onClick={() => {
+                  window.location = "activeorders";
+                }}
+              >
+                Track Orders 🟢
+              </Button>{" "}
             </CardActions>
           </Card>
         </Grid>
@@ -133,19 +145,26 @@ export default function App() {
                 Total Menu Items
               </Typography>
               <Typography variant="h5" component="h2">
-                {data[3]}
+                {data && data[3]}
               </Typography>
             </CardContent>
             <CardActions>
-              <Button size="small">Manage Menu 📜</Button>
+              <Button
+                size="small"
+                onClick={() => {
+                  window.location = "menu";
+                }}
+              >
+                Manage Menu 📜
+              </Button>
             </CardActions>
           </Card>
         </Grid>
 
         <Grid container item lg={9} xs={12} spacing={1}>
-          <Orders data={data[4]} />
+          <Orders data={data && data[4]} />
         </Grid>
-        {data[5] && (
+        {data && data[5] && (
           <Grid container item lg={3} xs={12} spacing={1}>
             <Chart data={data[5]} />
           </Grid>

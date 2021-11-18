@@ -76,13 +76,12 @@ export default function RecipeReviewCard(orderdetails) {
   const [timeColor, updateTimeColor] = React.useState("");
 
   function timeupdater() {
-    var Currtime = formatAMPM(new Date());
     var StartTime = orderdetails.time;
-    var timeStart = new Date("18/11/2021 " + "5:00 AM");
-    var timeEnd = new Date("18/11/2021 " + "5:30 PM");
+    var timeStart = new Date("2021/11/18 " + StartTime);
+    var timeEnd = new Date("2021/11/18 " + formatAMPM(new Date()));
     var diff = (timeEnd - timeStart) / 60000;
     var minutes = diff % 60;
-    console.log(minutes);
+    console.log(formatAMPM(new Date()), StartTime);
     if (orderdetails.date !== todaysdate()) {
       updateTimeColor("error");
       updateTime("1+ Day");

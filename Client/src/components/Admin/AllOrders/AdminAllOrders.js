@@ -112,7 +112,7 @@ export default function RecipeReviewCard() {
               <></>
             )
           )}
-          {data.length === 0 ? (
+          {data && data.length === 0 ? (
           <Container maxWidth="sm" className={classes.menu}>
             <Typography component="h6" variant="h6">
               Looks like you do not have any active orders correctly.
