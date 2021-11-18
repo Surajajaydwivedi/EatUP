@@ -15,7 +15,9 @@ const Frontend = () => {
       <Switch>
         <Route path="/" component={Home} exact />
         <Route path="/signin" component={SigninPage} exact />
+        <Route path="/login" component={SigninPage} exact />
         <Route path="/signup" component={SignupPage} exact />
+        <Route path="/register" component={SignupPage} exact />
         <Route path="/store/" component={Menu} />
         <Route path="/admin/" component={Admin} />
         <Route path="/404" component={Error} />

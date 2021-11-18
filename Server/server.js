@@ -130,6 +130,20 @@ async function validatesessions(sess) {
   return xx;
 }
 
+app.post("/LoginCheck", async function (req, res) {
+  var obj = req.body;
+  const sessdetails = await validatesessions(obj.session);
+  if (sessdetails == false) {
+    res.json({
+      bool: false,
+    });
+  } else {
+    res.json({
+      bool: true,
+    });
+  }
+});
+
 app.post("/GetItemsForMenuManager", async function (req, res) {
   var obj = req.body;
   const sessdetails = await validatesessions(obj.session);
@@ -358,7 +372,6 @@ app.post("/GetDasboardData", async function (req, res) {
     if (allOrders[i].date == hp.todaysdate()) {
       todaysOrders += 1;
     }
-    
   }
   returningData.push(Revenue);
   returningData.push(todaysOrders);
@@ -376,7 +389,7 @@ app.post("/GetDasboardData", async function (req, res) {
   } else {
     returningData.push(allOrders.reverse().slice(0, 5));
   }
-  returningData.push(hp.last7days([].concat(xx.Orders, xx.inactiveOrders)))
+  returningData.push(hp.last7days([].concat(xx.Orders, xx.inactiveOrders)));
   res.json({
     ret: returningData,
   });
