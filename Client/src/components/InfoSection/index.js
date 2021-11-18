@@ -136,6 +136,9 @@ const Navbar = ({ toggle }) => {
               </NavLinks>
             </NavItem>
             <NavItem>
+              <NavBtnLinksignup to="/howitworks">Help</NavBtnLinksignup>
+            </NavItem>
+            <NavItem>
               <NavBtnLinksignup to="/signup">Sign Up</NavBtnLinksignup>
             </NavItem>
           </NavMenu>
@@ -304,7 +307,7 @@ const Footer = () => {
           </FooterLinkItems>
 
           <FooterLinkItems>
-            <FooterLink to="/privacypolicy">Privacy Policy</FooterLink>
+            <FooterLink to="/howitworks">How it works</FooterLink>
           </FooterLinkItems>
 
           <FooterLinkItems>

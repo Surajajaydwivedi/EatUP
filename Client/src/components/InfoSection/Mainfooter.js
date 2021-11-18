@@ -16,7 +16,7 @@ const Mainfooter = () => {
             </FooterLinkItems>
 
             <FooterLinkItems>
-                <FooterLink to="/privacypolicy">Privacy Policy</FooterLink>
+                <FooterLink to="/howitworks">How it works</FooterLink>
             </FooterLinkItems>
 
             <FooterLinkItems>
