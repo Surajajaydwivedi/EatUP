@@ -7,7 +7,7 @@ import CropFreeIcon from "@material-ui/icons/CropFree";
 import HistoryIcon from "@material-ui/icons/History";
 import AlarmIcon from "@material-ui/icons/Alarm";
 import { Route, Switch } from "react-router-dom";
-
+import Error from "./404";
 import {
   Drawer as MUIDrawer,
   ListItem,
@@ -268,6 +268,9 @@ export default function App(props) {
               </Route>
               <Route path="/admin/qr">
                 <Qr />
+              </Route>
+              <Route path="*" >
+              <Dashboard />
               </Route>
             </Switch>
             <Footer />

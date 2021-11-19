@@ -98,11 +98,21 @@ app.post("/adminsignin", async function (req, res) {
     return;
   }
 
-  db.collection("Sessions").insertOne({
-    sessionid: sess,
-    time: hp.currtime().toString(),
-    key: xx.key,
-  });
+  var yy = await db.collection("Sessions").findOne({ key: xx.key });
+  if (yy) {
+    db.collection("Sessions").updateOne(
+      { key: xx.key },
+      {
+        $set: { sessionid: sess, time: hp.currtime() },
+      }
+    );
+  } else {
+    db.collection("Sessions").insertOne({
+      sessionid: sess,
+      time: hp.currtime(),
+      key: xx.key,
+    });
+  }
 });
 
 app.post("/GetItemsForUser", async function (req, res) {
@@ -123,11 +133,24 @@ app.post("/GetItemsForUser", async function (req, res) {
 });
 
 async function validatesessions(sess) {
-  if (!sess) {
+  if (!sess || sess.length!==32) {
     return false;
   }
   var xx = await db.collection("Sessions").findOne({ sessionid: sess });
+  currentTime = hp.currtime();
+  if(currentTime-xx.time> 1800000){
+    return false
+  }
   return xx;
+}
+
+async function updateSessionTime(sess) {
+  db.collection("Sessions").updateOne(
+    { sessionid: sess },
+    {
+      $set: { time: hp.currtime() },
+    }
+  );
 }
 
 app.post("/LoginCheck", async function (req, res) {
@@ -165,6 +188,7 @@ app.post("/GetItemsForMenuManager", async function (req, res) {
   } else {
     res.json({ bool: false });
   }
+  updateSessionTime(obj.session);
 });
 
 app.post("/adminItemEdit", async function (req, res) {
@@ -243,6 +267,7 @@ app.post("/adminItemEdit", async function (req, res) {
     );
     res.json({ bool: true });
   }
+  updateSessionTime(obj.session);
 });
 
 app.post("/neworder", async function (req, res) {
@@ -315,10 +340,10 @@ app.post("/GetActiveOrders", async function (req, res) {
   res.json({
     items: xx.Orders,
   });
+  updateSessionTime(obj.session);
 });
 
 app.post("/UpdateOrders", async function (req, res) {
-  console.log("fasdf");
   var obj = req.body;
   const sessdetails = await validatesessions(obj.session);
   if (sessdetails == false) {
@@ -350,6 +375,7 @@ app.post("/UpdateOrders", async function (req, res) {
   res.json({
     bool: true,
   });
+  updateSessionTime(obj.session);
 });
 
 app.post("/GetDasboardData", async function (req, res) {
@@ -393,4 +419,5 @@ app.post("/GetDasboardData", async function (req, res) {
   res.json({
     ret: returningData,
   });
+  updateSessionTime(obj.session);
 });

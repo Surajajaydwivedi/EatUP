@@ -21,6 +21,7 @@ const Frontend = () => {
         <Route path="/store/" component={Menu} />
         <Route path="/admin/" component={Admin} />
         <Route path="/404" component={Error} />
+        <Route path="*" component={Error} />
       </Switch>
     </Router>
   );
