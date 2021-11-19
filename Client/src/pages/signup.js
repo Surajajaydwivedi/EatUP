@@ -31,6 +31,7 @@ import QR from "../components/HelperComponents/qr";
 import ReactS3 from "react-s3";
 import { uploadFile } from "react-s3";
 const crypto = require("crypto");
+
 const axios = require("axios");
 require("dotenv").config();
 
@@ -262,33 +263,14 @@ export default function HorizontalLinearStepper() {
     var tempdata = {
       key: key,
       email: emailid,
-      password: password,
+      password: crypto.createHash("sha1").update(password).digest("hex"),
       name: name,
       phno: ph,
       address: address,
       city: city,
       logo: retval[0],
       image: retval[1],
-      items: [
-        {
-          Itemkey: "12c-32f-faf3",
-          name: "Aloo Paratha",
-          price: "40",
-          available: "true",
-        },
-        {
-          Itemkey: "12c-32f-faf3",
-          name: "Chole Bhature",
-          price: "100",
-          available: "true",
-        },
-        {
-          Itemkey: "12c-32f-faf3",
-          name: "Chole Kulche",
-          price: "60",
-          available: "false",
-        },
-      ],
+      items: [],
     };
     axios.post("http://localhost:5000/adminsignup", tempdata);
   }

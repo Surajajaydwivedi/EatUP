@@ -20,6 +20,7 @@ import Mainfooter from "../components/InfoSection/Mainfooter";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import axios from "axios";
+const crypto = require("crypto");
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -84,7 +85,7 @@ export default function SignIn() {
   async function validate() {
     var data = {
       email: enteredEmail,
-      password: enteredPass,
+      password: crypto.createHash("sha1").update(enteredPass).digest("hex"),
     };
     const resp = await axios.post("http://localhost:5000/adminsignin", data);
     if (resp.data.bool === false) {
