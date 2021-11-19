@@ -129,7 +129,9 @@ function App() {
         key: storeid,
       });
       if(x.data.bool===true){
-      updatedata(x.data);}
+      updatedata(x.data);
+        console.log(x.data);
+    }
       else{
         window.open("http://localhost:3000/404","_self")
       }
@@ -204,7 +206,8 @@ function App() {
           </IconButton> 
         </Toolbar>
       </AppBar>
-      <Cart />
+      {data&&  <Cart restname = {data.name} restaddress = {data.address} restcity = {data.city} restlogo = {data.logo} /> }
+     
 
       {data &&
         data.items.map((dish) => (

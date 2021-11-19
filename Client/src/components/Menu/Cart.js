@@ -118,7 +118,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function App() {
+function App(props) {
   let location = useLocation();
   var storeid = location.pathname.split("/")[2];
   const classes = useStyles();
@@ -294,7 +294,7 @@ function App() {
           </Card>
         </Grid>
         <Divider />
-        {itemcount && <PlaceOrder name={session} storeid={storeid} />}
+        {itemcount && <PlaceOrder name={session} storeid={storeid} restname = {props.restname} restaddress = {props.restaddress} restcity = {props.restcity} restlogo = {props.restlogo} />}
         <Divider className={classes.plo} />
       </Drawer>
     </>

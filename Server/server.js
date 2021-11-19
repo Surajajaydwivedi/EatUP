@@ -118,13 +118,14 @@ app.post("/adminsignin", async function (req, res) {
 app.post("/GetItemsForUser", async function (req, res) {
   var obj = req.body;
   var xx = await db.collection("Items").findOne({ key: obj.key });
-
+  var yy = await db.collection("Admin").findOne({ key: obj.key });
   if (xx) {
     res.json({
       bool: true,
-      name: "Pizza Hut",
-      image: "images/123.png",
-      logo: "images/123-logo.png",
+      name: yy.name,
+      logo: yy.logo,
+      address: yy.address,
+      city: yy.city,
       items: xx.itmes,
     });
   } else {

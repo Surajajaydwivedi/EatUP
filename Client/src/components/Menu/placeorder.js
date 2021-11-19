@@ -40,7 +40,7 @@ import clsx from "clsx";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
-import { Container, Grid, Card, CardContent, Box } from "@material-ui/core";
+import { Container, Grid, Card, CardContent } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -48,6 +48,8 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import Box from '@material-ui/core/Box';
+import Invoice from "./invoice";
 import { func } from "prop-types";
 const axios = require("axios");
 
@@ -229,6 +231,7 @@ function App(props) {
   const [name, updateName] = React.useState("");
   const [email, updateEmail] = React.useState("");
   const [table, updateTable] = React.useState("");
+  const [bool, updateBool] = React.useState(false);
   var totalprice = 0;
   const storeid = props.storeid;
   var orderitmes = [];
@@ -263,7 +266,7 @@ function App(props) {
   var i = 0;
   while (i < orderitmes.length) {
     var tempitemkey = orderitmes[i].Itemkey;
-    console.log(tempitemkey);
+    
     var exists = 0;
     for (let j = 0; j < itemfromserver.length; j++) {
       if (itemfromserver[j].Itemkey === tempitemkey) {
@@ -399,6 +402,7 @@ function App(props) {
       cost: totalprice,
       tableno: table,
     });
+    
   }
 
   const handleNext = () => {
@@ -407,12 +411,11 @@ function App(props) {
         return;
       }
     } else if (activeStep === 1) {
+      updateBool(true);
       sendorder();
     }
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    if (activeStep === 1) {
-      window.location.reload();
-    }
+    
   };
 
   const handleBack = () => {
@@ -462,12 +465,20 @@ function App(props) {
         </Stepper>
 
         <div>
-          {activeStep === steps.length ? (
+          {activeStep === steps.length && bool ? (
             <div>
+            <Container maxWidth="sm" >
               <Typography className={classes.instructions}>
                 Your Order is placed !
               </Typography>
-              <Button onClick={handleClose}>Close</Button>
+              <Typography className={classes.instructions}>
+                You Can Download your Invoice by clicking Download down below, we have also sent you the copy on your given email address.
+              </Typography>
+             <Button onClick={()=>{Invoice([props.restname, props.restaddress, props.restcity, props.restlogo, orderitmes])}} color= "primary">Download Invoice</Button>
+              
+              <Button onClick={()=>{window.location.reload()}}>Close</Button>
+              </Container>
+              
             </div>
           ) : (
             <div>
