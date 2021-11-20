@@ -130,7 +130,6 @@ function App() {
       });
       if(x.data.bool===true){
       updatedata(x.data);
-        console.log(x.data);
     }
       else{
         window.open("http://localhost:3000/404","_self")

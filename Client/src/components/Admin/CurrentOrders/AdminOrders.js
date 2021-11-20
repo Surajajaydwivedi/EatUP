@@ -81,7 +81,7 @@ export default function RecipeReviewCard(orderdetails) {
     var timeEnd = new Date("2021/11/18 " + formatAMPM(new Date()));
     var diff = (timeEnd - timeStart) / 60000;
     var minutes = diff % 60;
-    console.log(formatAMPM(new Date()), StartTime);
+
     if (orderdetails.date !== todaysdate()) {
       updateTimeColor("error");
       updateTime("1+ Day");

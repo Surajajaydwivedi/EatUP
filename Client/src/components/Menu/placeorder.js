@@ -48,7 +48,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import Box from '@material-ui/core/Box';
+import Box from "@material-ui/core/Box";
 import Invoice from "./invoice";
 import { func } from "prop-types";
 const axios = require("axios");
@@ -231,6 +231,7 @@ function App(props) {
   const [name, updateName] = React.useState("");
   const [email, updateEmail] = React.useState("");
   const [table, updateTable] = React.useState("");
+  const [invoiceData, updateInvoiceData] = React.useState([0, 1, 2]);
   const [bool, updateBool] = React.useState(false);
   var totalprice = 0;
   const storeid = props.storeid;
@@ -266,7 +267,7 @@ function App(props) {
   var i = 0;
   while (i < orderitmes.length) {
     var tempitemkey = orderitmes[i].Itemkey;
-    
+
     var exists = 0;
     for (let j = 0; j < itemfromserver.length; j++) {
       if (itemfromserver[j].Itemkey === tempitemkey) {
@@ -393,6 +394,8 @@ function App(props) {
   async function sendorder() {
     orderitmes.pop();
     sessionStorage.setItem("food", "");
+    updateInvoiceData(orderitmes);
+    updateBool(true);
     await axios.post("http://localhost:5000/neworder", {
       key: storeid,
       name: name,
@@ -402,7 +405,6 @@ function App(props) {
       cost: totalprice,
       tableno: table,
     });
-    
   }
 
   const handleNext = () => {
@@ -411,11 +413,9 @@ function App(props) {
         return;
       }
     } else if (activeStep === 1) {
-      updateBool(true);
       sendorder();
     }
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    
   };
 
   const handleBack = () => {
@@ -431,6 +431,9 @@ function App(props) {
   };
 
   const handleClose = () => {
+    if (activeStep === 2) {
+      window.location.reload();
+    }
     setPopup(false);
   };
 
@@ -467,18 +470,38 @@ function App(props) {
         <div>
           {activeStep === steps.length && bool ? (
             <div>
-            <Container maxWidth="sm" >
-              <Typography className={classes.instructions}>
-                Your Order is placed !
-              </Typography>
-              <Typography className={classes.instructions}>
-                You Can Download your Invoice by clicking Download down below, we have also sent you the copy on your given email address.
-              </Typography>
-             <Button onClick={()=>{Invoice([props.restname, props.restaddress, props.restcity, props.restlogo, orderitmes])}} color= "primary">Download Invoice</Button>
-              
-              <Button onClick={()=>{window.location.reload()}}>Close</Button>
+              <Container maxWidth="sm">
+                <Typography className={classes.instructions}>
+                  Your Order is placed !
+                </Typography>
+                <Typography className={classes.instructions}>
+                  You Can Download your Invoice by clicking Download down below,
+                  we have also sent you the copy on your given email address.
+                </Typography>
+                <Button
+                  onClick={() => {
+                    Invoice([
+                      props.restname,
+                      props.restaddress,
+                      props.restcity,
+                      props.restlogo,
+                      invoiceData,
+                    ]);
+                  }}
+                  color="primary"
+                >
+                  Download Invoice
+                </Button>
+
+                <Button
+                  onClick={() => {
+                    sessionStorage.setItem("Invoice", "");
+                    window.location.reload();
+                  }}
+                >
+                  Close
+                </Button>
               </Container>
-              
             </div>
           ) : (
             <div>

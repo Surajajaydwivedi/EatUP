@@ -4,9 +4,9 @@ const cors = require("cors");
 const app = express();
 var server = require("http").createServer(app);
 var formidable = require("formidable");
-var fs = require("fs");
 var crypto = require("crypto");
 const hp = require("./ServerFiles/HelperFunctions");
+const Mailing = require("./ServerFiles/Mail");
 
 server.listen(PORT, function () {
   var host = server.address().address;
@@ -119,6 +119,7 @@ app.post("/GetItemsForUser", async function (req, res) {
   var obj = req.body;
   var xx = await db.collection("Items").findOne({ key: obj.key });
   var yy = await db.collection("Admin").findOne({ key: obj.key });
+
   if (xx) {
     res.json({
       bool: true,
@@ -134,13 +135,13 @@ app.post("/GetItemsForUser", async function (req, res) {
 });
 
 async function validatesessions(sess) {
-  if (!sess || sess.length!==32) {
+  if (!sess || sess.length !== 32) {
     return false;
   }
   var xx = await db.collection("Sessions").findOne({ sessionid: sess });
   currentTime = hp.currtime();
-  if(currentTime-xx.time> 1800000){
-    return false
+  if (!xx || currentTime - xx.time > 1800000) {
+    return false;
   }
   return xx;
 }
@@ -273,10 +274,11 @@ app.post("/adminItemEdit", async function (req, res) {
 
 app.post("/neworder", async function (req, res) {
   var obj = req.body;
+  let mailDetails = [];
   let Orderlist = await db.collection("Orders").findOne({ key: obj.key });
   if (Orderlist) {
     Updatedlist = Orderlist.Orders;
-
+    mailDetails.push(Orderlist.totalOrders + 1)
     Updatedlist.push({
       time: hp.formatAMPM(new Date()),
       date: hp.todaysdate(),
@@ -299,6 +301,7 @@ app.post("/neworder", async function (req, res) {
     );
   } else {
     let Orderlist = [];
+    mailDetails.push(1)
     Orderlist.push({
       time: hp.formatAMPM(new Date()),
       date: hp.todaysdate(),
@@ -320,6 +323,15 @@ app.post("/neworder", async function (req, res) {
       inactiveOrders: [],
     });
   }
+  
+  mailDetails.push(obj.items);
+  mailDetails.push((obj.cost * 8) / 100 + obj.cost);
+  let yy = await db.collection("Admin").findOne({ key: obj.key });
+  mailDetails.push(yy.address);
+  mailDetails.push(yy.city);
+  mailDetails.push(yy.phno);
+  mailDetails.push(obj.name);
+  Mailing.OrderConfirmationMail(obj.email, mailDetails);
 });
 
 app.post("/GetActiveOrders", async function (req, res) {
