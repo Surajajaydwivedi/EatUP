@@ -19,6 +19,8 @@ function insert(data) {
     phno: data.phno,
     address: data.address,
     city: data.city,
+    state: state,
+    pincode: pincode,
     logo: data.logo,
     image: data.image,
   };
