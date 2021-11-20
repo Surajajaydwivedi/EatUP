@@ -22,56 +22,11 @@ import ImageListItem from "@material-ui/core/ImageListItem";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import { useQRCode } from "react-qrcodes";
 import { typography } from "@material-ui/system";
-var htmlToImage = require('html-to-image');
-var download = require("downloadjs");
-const useStyles = makeStyles((theme) => ({
-  button: {
-    flexGrow: 1,
-    display: "block",
-    marginBottom: "15px",
-  },
-}));
 
-function App(props) {
-  const classes = useStyles();
-  const [inputRef] = useQRCode({
-    text: "www.gmail.com",
-    options: {
-      type: "image/jpeg",
-      quality: 0.5,
-      level: "M",
-      margin: 2,
-      scale: 4,
-      width: 300,
-      color: {
-        dark: "#3FDE82",
-        light: "#0D1B2A",
-      },
-    },
-  });
+function NewComponent(){
+      return (
   
-
-  function prepHref() {
-    var url = inputRef.current.currentSrc;
-    var a = document.createElement("a"); //Create <a>
-    a.href = url; //Image Base64 Goes here
-    a.download = "Qr.png"; //File name Here
-    a.click();
-  }
-  function down(){
-    var node = document.getElementById('my-node');
-
-    htmlToImage.toPng(document.getElementById('my-node'))
-  .then(function (dataUrl) {
-    download(dataUrl, 'my-node.png');
-  });
-  }
-
-  return (
-    <>
-      <Typography>{props.admin && "Registration Was Successful"}</Typography>
-      <Typography>{props.admin && "You can also download your QR later"}</Typography>
-      <table id="my-node" border={0} cellPadding={0} cellSpacing={0} className="nl-container" role="presentation" style={{msoTableLspace: '0pt', msoTableRspace: '0pt', backgroundColor: '#e5e5e5'}} width="100%">
+        <table border={0} cellPadding={0} cellSpacing={0} className="nl-container" role="presentation" style={{msoTableLspace: '0pt', msoTableRspace: '0pt', backgroundColor: '#e5e5e5'}} width="100%">
           <tbody>
             <tr>
               <td>
@@ -146,44 +101,26 @@ function App(props) {
                     </tr>
                   </tbody>
                 </table>
-                <table align="center" border={0} cellPadding={0} cellSpacing={0} className="row row-3" role="presentation" style={{msoTableLspace: '0pt', msoTableRspace: '0pt'}} width="100%">
-    <tbody>
-      <tr>
-        <td>
-          <table align="center" border={0} cellPadding={0} cellSpacing={0} className="row-content stack" role="presentation" style={{msoTableLspace: '0pt', msoTableRspace: '0pt', backgroundColor: '#f2f2f2', color: '#000000'}} width={640}>
-            <tbody>
-              <tr>
-                <td className="column" style={{msoTableLspace: '0pt', msoTableRspace: '0pt', fontWeight: 400, textAlign: 'left', verticalAlign: 'top'}} width="100%">
-                  <table border={0} cellPadding={0} cellSpacing={0} role="presentation" style={{msoTableLspace: '0pt', msoTableRspace: '0pt'}} width="100%">
-                    <tbody><tr>
-                        <td style={{width: '25px', backgroundColor: '#0D1B2A'}}>&nbsp;</td>
-                        <td style={{paddingTop: '0px', paddingBottom: '0px', borderTop: '0px', borderBottom: '0px', width: '590px'}}>
-                          <table border={0} cellPadding={0} cellSpacing={0} className="image_block" role="presentation" style={{msoTableLspace: '0pt', msoTableRspace: '0pt'}} width="100%">
-                            <tbody><tr>
-                                <td style={{width: '100%', paddingRight: '0px', paddingLeft: '0px', paddingTop: '20px'}}>
-                                  <div align="center" style={{lineHeight: '10px'}}>
-      <img
-        ref={inputRef}
-        download="myimage"
-        id="qr-img"
-        className={classes.button}
-      /></div>
-                                </td>
-                              </tr>
-                            </tbody></table>
-                        </td>
-                        <td style={{width: '25px', backgroundColor: '#0D1B2A'}}>&nbsp;</td>
-                      </tr>
-                    </tbody></table>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-       <table align="center" border={0} cellPadding={0} cellSpacing={0} className="row row-4" role="presentation" style={{msoTableLspace: '0pt', msoTableRspace: '0pt'}} width="100%">
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+                <table align="center" border={0} cellPadding={0} cellSpacing={0} className="row row-4" role="presentation" style={{msoTableLspace: '0pt', msoTableRspace: '0pt'}} width="100%">
                   <tbody>
                     <tr>
                       <td>
@@ -326,19 +263,9 @@ function App(props) {
               </td>
             </tr>
           </tbody></table>
-      <Button
-        variant="contained"
-        color="secondary"
-        display="block"
-        onClick={() => {
-          down();
-        }}
-        startIcon={<GetAppIcon />}
-      >
-        Download
-      </Button>
-    </>
-  );
-}
+        
+      );
+    }
+  
 
-export default App;
+  export default NewComponent;

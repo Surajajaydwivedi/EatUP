@@ -60,7 +60,6 @@ function ActivationMail(reciever) {
 }
 
 function OrderConfirmationMail(reciever, details) {
-  console.log(details)
   var tempDish = Dish;
   var tempOrderMain = OrderMain;
   for (let i = 0; i < details[1].length; i++) {
