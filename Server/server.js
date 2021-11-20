@@ -278,7 +278,7 @@ app.post("/neworder", async function (req, res) {
   let Orderlist = await db.collection("Orders").findOne({ key: obj.key });
   if (Orderlist) {
     Updatedlist = Orderlist.Orders;
-    mailDetails.push(Orderlist.totalOrders + 1)
+    mailDetails.push(Orderlist.totalOrders + 1);
     Updatedlist.push({
       time: hp.formatAMPM(new Date()),
       date: hp.todaysdate(),
@@ -301,7 +301,7 @@ app.post("/neworder", async function (req, res) {
     );
   } else {
     let Orderlist = [];
-    mailDetails.push(1)
+    mailDetails.push(1);
     Orderlist.push({
       time: hp.formatAMPM(new Date()),
       date: hp.todaysdate(),
@@ -323,7 +323,7 @@ app.post("/neworder", async function (req, res) {
       inactiveOrders: [],
     });
   }
-  
+
   mailDetails.push(obj.items);
   mailDetails.push((obj.cost * 8) / 100 + obj.cost);
   let yy = await db.collection("Admin").findOne({ key: obj.key });
@@ -433,4 +433,21 @@ app.post("/GetDasboardData", async function (req, res) {
     ret: returningData,
   });
   updateSessionTime(obj.session);
+});
+
+app.post("/GetQRDetails", async function (req, res) {
+  var obj = req.body;
+  const sessdetails = await validatesessions(obj.session);
+  if (sessdetails == false) {
+    res.json({
+      bool: false,
+    });
+    return;
+  }
+  var xx = await db.collection("Admin").findOne({ key: sessdetails.key });
+  res.json({
+    name: xx.name,
+    logo: xx.logo,
+    key: sessdetails.key,
+  });
 });

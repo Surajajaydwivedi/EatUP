@@ -104,15 +104,15 @@ export default function HorizontalLinearStepper() {
   const [skipped, setSkipped] = React.useState(new Set());
   const [open, setOpen] = React.useState(false);
   const [openerr, setOpenerr] = React.useState(false);
-
   const [ph, updateph] = useState(" ");
   const [password, updatepassword] = useState("");
   const [samepass, updatesamepass] = useState(false);
   const [validemail, updatevalidemail] = useState(false);
   const [emailid, updateemailid] = useState("");
-  const [image, updateimage] = useState("");
   const [name, updatename] = useState("");
   const [address, updateaddress] = useState("");
+  const [state, updatestate] = useState("");
+  const [pincode, updatepincode] = useState("");
   const [city, updatecity] = useState("");
   const [errormsg, updateerrmsg] = useState("Something went wrong");
   const [successmsg, updatesuccessmsg] = useState("Details Saved !");
@@ -124,7 +124,6 @@ export default function HorizontalLinearStepper() {
   function handlechangecity() {
     var x = document.getElementById("city").value;
     updatecity(x);
-    updateaddress(address + x);
   }
   function handlechangeaddress() {
     var x = document.getElementById("address").value;
@@ -132,11 +131,11 @@ export default function HorizontalLinearStepper() {
   }
   function handlechangestate() {
     var x = document.getElementById("state").value;
-    updateaddress(address + x);
+    updatestate(x);
   }
   function handlechangepincode() {
     var x = document.getElementById("pincode").value;
-    updateaddress(address + x);
+    updatepincode(x);
   }
   function handlephchange(value) {
     if (value) {
@@ -268,6 +267,8 @@ export default function HorizontalLinearStepper() {
       phno: ph,
       address: address,
       city: city,
+      state: state,
+      pincode: pincode,
       logo: retval[0],
       image: retval[1],
       items: [],
@@ -503,7 +504,7 @@ export default function HorizontalLinearStepper() {
         return (
           <>
             <div id="placeHolder"></div>
-            <QR keyy={key} admin={true} />{" "}
+            <QR keyy={key} name = {name} admin={true} />{" "}
           </>
         );
       default:
