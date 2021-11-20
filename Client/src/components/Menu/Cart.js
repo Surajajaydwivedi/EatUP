@@ -5,6 +5,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import InputBase from "@material-ui/core/InputBase";
 import Badge from "@material-ui/core/Badge";
+
 import List from "@material-ui/core/List";
 import Drawer from "@material-ui/core/Drawer";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
@@ -26,6 +27,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import MuiPhoneNumber from "material-ui-phone-number";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import CardHeader from "@material-ui/core/CardHeader"
 import React, { useState, useEffect } from "react";
 import Divider from "@material-ui/core/Divider";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
@@ -84,10 +86,13 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   dishcount: {
-    marginRight: "25px",
-    marginLeft: "80px",
 
-    fontSize: "15px",
+      /*marginRight: "25px",
+      marginLeft: "60px",
+      minWidth: 40,*/
+      paddingLeft: "190px",
+      /*paddingRight: "80px",*/
+      fontSize: "15px",
   },
   fname: {
     marginRight: "155px",
@@ -231,6 +236,7 @@ function App(props) {
                   <Card className={classes.root}>
                     <div className={classes.details}>
                       <CardContent className={classes.content}>
+                      <Box  m={0} p={0}>
                         <Typography
                           component="h6"
                           variant="h6"
@@ -239,17 +245,25 @@ function App(props) {
                         >
                           {dish.name}
                         </Typography>
+                      </Box>
+                        <Box  m={-3} p={0} sx={{ mx: "auto" }}>
                         <Typography
                           component="h6"
                           variant="h6"
                           display="inline"
                           className={classes.dishcount}
+                          
                         >
                           X {dish.total}
                         </Typography>
+                        </Box>
+                        <Box  m={3} p={0} ml={0}>
                         <Typography variant="subtitle1" color="textSecondary">
+                          
                           {dish.price.split("/")[0]} ₹{"     "}
                         </Typography>
+                        </Box>
+                      
 
                         <Button
                           variant="contained"
