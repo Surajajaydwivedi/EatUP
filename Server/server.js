@@ -69,8 +69,7 @@ app.post("/adminsignup", async function (req, res) {
   db.collection("Store Credentials").insertOne(returnedData[0]);
   db.collection("UserMenu").insertOne(returnedData[1]);
   db.collection("Admin").insertOne(returnedData[2]);
-  db.collection("Landing").insertOne(returnedData[3]);
-  db.collection("Items").insertOne(returnedData[4]);
+  db.collection("Items").insertOne(returnedData[3]);
   res.json({
     bool: true,
   });

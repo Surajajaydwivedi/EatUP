@@ -14,7 +14,6 @@ function insert(data) {
   var data3 = {
     key: data.key,
     email: data.email,
-    password: data.password,
     name: data.name,
     phno: data.phno,
     address: data.address,
@@ -24,17 +23,12 @@ function insert(data) {
     logo: data.logo,
     image: data.image,
   };
-  var data4 = {
-    key: data.key,
-    name: data.name,
-    city: data.city,
-  };
   var dataitem = {
     key: data.key,
     itmes: data.items,
   };
 
-  return [data2, data1, data3, data4, dataitem];
+  return [data2, data1, data3, dataitem];
 }
 
 function currtime() {
