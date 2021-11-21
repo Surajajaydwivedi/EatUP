@@ -169,6 +169,7 @@ const Sidebar = ({ isOpen, toggle }) => {
           <SidebarLink to="services" onClick={toggle}>
             Services
           </SidebarLink>
+          <SidebarLinksignup to="/howitworks">Help</SidebarLinksignup>
           <SidebarLinksignup to="/signup">Sign Up</SidebarLinksignup>
         </SidebarMenu>
         <SideBtnWrap>
