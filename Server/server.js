@@ -504,13 +504,34 @@ app.post("/verifyActivationCode", async function (req, res) {
         bool: true,
         expire: false,
       });
-    }
-    else{
+    } else {
       res.json({
         bool: false,
         expire: false,
       });
     }
   }
+});
+
+app.post("/getSearchData", async function (req, res) {
+  var obj = req.body;
+  /*  cursor = await db.collection("Admin").find({ image: "" }); */
+  
+
+  db.collection("Admin")
+    .find({ image: "" })
+    .toArray(function (err, result) {
+      var ret = [];
+      for (let i = 0; i < result.length; i++) {
+        ret.push({
+          name: result[i].name,
+          city: result[i].city,
+          link: "http://localhost:3000/store/" + result[i].key,
+        });
+      }
+      res.json({
+        data: ret,
+      });
+    });
 
 });
