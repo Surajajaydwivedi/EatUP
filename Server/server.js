@@ -22,6 +22,13 @@ app.use(
   })
 );
 
+const io = require("socket.io")(5001,{
+  cors: {
+    origin : "http://localhost:5000",
+    methods: ["GET","POST"],
+  }
+});
+
 const mongoose = require("mongoose");
 const { SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS } = require("constants");
 mongoose.connect(

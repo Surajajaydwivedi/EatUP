@@ -78,7 +78,6 @@ fs.readFile(
 
 /* ================================================================================================= */
 
-
 function SendMail(reciever, html, subject) {
   var transporter = nodemailer.createTransport({
     service: "gmail",
