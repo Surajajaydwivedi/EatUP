@@ -222,7 +222,7 @@ function getSteps() {
 
 function App(props) {
   const classes = useStyles();
-  const [ph, updateph] = useState();
+  const [ph, updateph] = useState("");
   const [popup, setPopup] = React.useState(false);
   const [activeStep, setActiveStep] = React.useState(0);
   const [session, updatesession] = React.useState(0);
@@ -388,7 +388,7 @@ function App(props) {
   const steps = getSteps();
 
   function allgood() {
-    if (name === "" || email.length <= 5 || !validemail || ph.length < 11)
+    if (name === "" || email.length <= 5 || !validemail || !ph || ph.length < 11)
       return false;
   }
   async function sendorder() {

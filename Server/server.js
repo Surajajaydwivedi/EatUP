@@ -451,3 +451,66 @@ app.post("/GetQRDetails", async function (req, res) {
     key: sessdetails.key,
   });
 });
+
+app.post("/sendActivationMail", async function (req, res) {
+  var obj = req.body;
+  var currTime = hp.currtime();
+  var xx = await db.collection("Verification").findOne({ email: obj.email });
+  if (xx) {
+    if (currTime - xx.time > 3600000) {
+      code = crypto.randomBytes(3).toString("hex");
+      Mailing.ActivationMail(obj.email, code);
+      db.collection("Verification").updateOne(
+        { email: obj.email },
+        {
+          $set: { code: code, time: currTime },
+        }
+      );
+    } else {
+      Mailing.ActivationMail(obj.email, xx.code);
+    }
+  } else {
+    code = crypto.randomBytes(3).toString("hex");
+    Mailing.ActivationMail(obj.email, code);
+    db.collection("Verification").insertOne({
+      email: obj.email,
+      code: code,
+      time: currTime,
+    });
+  }
+});
+
+app.post("/verifyActivationCode", async function (req, res) {
+  var obj = req.body;
+  var currTime = hp.currtime();
+  var xx = await db.collection("Verification").findOne({ email: obj.email });
+
+  if (currTime - xx.time > 3600000) {
+    code = crypto.randomBytes(3).toString("hex");
+    Mailing.ActivationMail(obj.email, code);
+    db.collection("Verification").updateOne(
+      { email: obj.email },
+      {
+        $set: { code: code, time: currTime },
+      }
+    );
+    res.json({
+      bool: false,
+      expire: true,
+    });
+  } else {
+    if (xx.code === obj.code) {
+      res.json({
+        bool: true,
+        expire: false,
+      });
+    }
+    else{
+      res.json({
+        bool: false,
+        expire: false,
+      });
+    }
+  }
+
+});

@@ -51,7 +51,7 @@ function App(props) {
   if (dataa) {
     link = "http://localhost:3000/store/" + dataa.key;
   } else {
-    link = "http://localhost:3000/store/" + props.key;
+    link = "http://localhost:3000/store/" + props.keyy;
   }
 
   const [inputRef] = useQRCode({

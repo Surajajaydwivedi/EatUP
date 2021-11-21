@@ -26,6 +26,7 @@ import MuiAlert from "@material-ui/lab/Alert";
 import MuiPhoneNumber from "material-ui-phone-number";
 import { red } from "@material-ui/core/colors";
 import Mainfooter from "../components/InfoSection/Mainfooter";
+import VpnKeyIcon from "@material-ui/icons/VpnKey";
 import Mainheader from "../components/InfoSection/Mainheader";
 import QR from "../components/HelperComponents/qr";
 import ReactS3 from "react-s3";
@@ -95,7 +96,7 @@ function Alert(props) {
 }
 
 function getSteps() {
-  return ["Personal Info", "Store Info", "Get Your QR"];
+  return ["Personal Info", "Verify", "Store Info", "Get Your QR"];
 }
 
 export default function HorizontalLinearStepper() {
@@ -104,6 +105,7 @@ export default function HorizontalLinearStepper() {
   const [skipped, setSkipped] = React.useState(new Set());
   const [open, setOpen] = React.useState(false);
   const [openerr, setOpenerr] = React.useState(false);
+  const [verificationCode, updateVerificationCode] = useState("");
   const [ph, updateph] = useState(" ");
   const [password, updatepassword] = useState("");
   const [samepass, updatesamepass] = useState(false);
@@ -112,6 +114,7 @@ export default function HorizontalLinearStepper() {
   const [name, updatename] = useState("");
   const [address, updateaddress] = useState("");
   const [state, updatestate] = useState("");
+  const [code, codeUpdate] = useState("");
   const [pincode, updatepincode] = useState("");
   const [city, updatecity] = useState("");
   const [errormsg, updateerrmsg] = useState("Something went wrong");
@@ -145,6 +148,10 @@ export default function HorizontalLinearStepper() {
   function handlepasschange() {
     var x = document.getElementById("password").value;
     updatepassword(x);
+  }
+  function handleVerificationCodeChange() {
+    var x = document.getElementById("verificationCode").value;
+    updateVerificationCode(x);
   }
   function handleconfirmchange() {
     var x = document.getElementById("c-password").value;
@@ -256,6 +263,22 @@ export default function HorizontalLinearStepper() {
     return resp.data.ans;
   }
 
+  async function sendVerificationCode() {
+    await axios.post("http://localhost:5000/sendActivationMail", {
+      email: emailid,
+    });
+    
+  }
+  async function VerifyCode() {
+    console.log("adsasdfadsf")
+    var xx = await axios.post("http://localhost:5000/verifyActivationCode", {
+      email: emailid,
+      code: verificationCode,
+    });
+    console.log(xx.data)
+    return xx.data
+  }
+
   async function insertdata() {
     var retval = await sendimgtoaws();
 
@@ -293,7 +316,7 @@ export default function HorizontalLinearStepper() {
       updateerrmsg("Invalid Email.");
       handleClickerr();
       return false;
-    } else if (ph.split(" ")[1].length < 11) {
+    } else if (!ph || ph.split(" ")[1].length < 11) {
       updateerrmsg("Phone Number can't be empty !");
       handleClickerr();
       return false;
@@ -390,6 +413,46 @@ export default function HorizontalLinearStepper() {
           </Container>
         );
       case 1:
+        return (
+          <>
+            <Container component="main" maxWidth="sm">
+              <CssBaseline />
+              <div className={classes.paper}>
+                <Avatar className={classes.avatar}>
+                  <VpnKeyIcon />
+                </Avatar>
+                <Typography component="h2" variant="h6">
+                  Enter the Verification Code Sent to you Email.
+                </Typography>
+                <form className={classes.form} noValidate>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <TextField
+                        variant="outlined"
+                        required
+                        fullWidth
+                        id="verificationCode"
+                        label="Verification Code"
+                        value={verificationCode}
+                        onChange={handleVerificationCodeChange}
+                        name="verify-code"
+                      />
+                    </Grid>
+                  </Grid>
+
+                  <Grid container justifyContent="flex-end">
+                    <Grid item>
+                      <Link href="/signin" variant="body2">
+                        Didn't Got any Email ? Resend Email.
+                      </Link>
+                    </Grid>
+                  </Grid>
+                </form>
+              </div>
+            </Container>
+          </>
+        );
+      case 2:
         return (
           <Container component="main" maxWidth="xs">
             <CssBaseline />
@@ -500,11 +563,11 @@ export default function HorizontalLinearStepper() {
             </div>
           </Container>
         );
-      case 2:
+      case 3:
         return (
           <>
             <div id="placeHolder"></div>
-            <QR keyy={key} name = {name} admin={true} />{" "}
+            <QR keyy={key} name={name} admin={true} />{" "}
           </>
         );
       default:
@@ -521,8 +584,10 @@ export default function HorizontalLinearStepper() {
     if (val === 0) {
       return "Check and Procced";
     } else if (val === 1) {
-      return "Register";
+      return "Verify";
     } else if (val === 2) {
+      return "Register";
+    } else if (val === 3) {
       return "Signin";
     }
   };
@@ -533,7 +598,24 @@ export default function HorizontalLinearStepper() {
       if (ret === false) {
         return;
       }
+      sendVerificationCode();
     } else if (value === 1) {
+      console.log("sdafdasasdf")
+      var ret = await VerifyCode();
+      console.log(ret)
+      if(ret.bool===false && ret.expire===false){
+        updateerrmsg("Wrong Code Entered.");
+        handleClickerr();
+        return;
+      }
+      else if (ret.bool===false && ret.expire===true){
+        updateerrmsg("Your Verification Code has Expired, Don't Worry we have Sent You Another One !");
+        handleClickerr();
+        return
+      }
+      updatesuccessmsg("Verified !");
+      handleClick();
+    } else if (value === 2) {
       if (document.getElementById("imglogo").value === "") {
         alert("Please upload store's logo");
         return;
@@ -541,7 +623,7 @@ export default function HorizontalLinearStepper() {
       updatesuccessmsg("Registered Successfully !");
       insertdata();
       handleClick();
-    } else if (value === 2) {
+    } else if (value === 3) {
       window.open("/signin", "_self");
     }
     let newSkipped = skipped;

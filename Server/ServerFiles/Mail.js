@@ -47,16 +47,13 @@ function SendMail(reciever, html, subject) {
       console.log("Email sent: " + info.response);
     }
   });
-  return code;
+  
 }
 
-function ActivationMail(reciever) {
-  var code = crypto.randomBytes(3).toString("hex").toUpperCase();
-  SendMail(
-    reciever,
-    SecurityCode.replace("!@#$%", code, "Activate your YumTrip Account !")
-  );
-  return code;
+function ActivationMail(reciever, code) {
+  var tempSecurityCode = SecurityCode.replace("!@#$%",code);
+  SendMail(reciever, tempSecurityCode, "Activate your YumTrip Account !")
+  
 }
 
 function OrderConfirmationMail(reciever, details) {
