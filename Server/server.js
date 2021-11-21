@@ -331,6 +331,7 @@ app.post("/neworder", async function (req, res) {
   mailDetails.push(yy.phno);
   mailDetails.push(obj.name);
   Mailing.OrderConfirmationMail(obj.email, mailDetails);
+  Mailing.OrderRecieveMail(yy.email, [obj.items, obj.cost]);
 });
 
 app.post("/GetActiveOrders", async function (req, res) {
@@ -366,11 +367,15 @@ app.post("/UpdateOrders", async function (req, res) {
   }
   var xx = await db.collection("Orders").findOne({ key: sessdetails.key });
   var orderlist = xx.Orders;
+  
   var inactiveorderlist = xx.inactiveOrders;
   for (let i = 0; i < orderlist.length; i++) {
     if (orderlist[i].orderno === obj.orderno) {
       if (obj.type === "Complete") {
         orderlist[i].completed = true;
+      }
+      if(obj.type === "Cancel"){
+        Mailing.OrderCancelledMail(orderlist[i].email,[orderlist[i].items,orderlist[i].cost,orderlist[i].orderno])
       }
       orderlist[i].active = false;
       inactiveorderlist.push(orderlist[i]);
