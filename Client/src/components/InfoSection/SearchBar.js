@@ -10,30 +10,53 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function SearchBar({ placeholder, data }) {
+function SearchBar({ placeholder }) {
+  var data = [
+    {
+      name: "Bilkul Op nhi",
+      city: "Agra",
+      link: "www.gmail.com",
+    },
+    {
+      name: "OP Store",
+      city: "Delhi",
+      link: "www.gmai.com",
+    },
+    
+  ]
   const [filteredData, setFilteredData] = useState([]);
   const classes = useStyles();
-  const [city, setCity] = React.useState('');
+  const [City, setCity] = React.useState(1);
   const handleChange = (event) => {
     setCity(event.target.value);
   }
   const [wordEntered, setWordEntered] = useState("");
 
   const handleFilter = (event) => {
+    
     const searchWord = event.target.value;
     setWordEntered(searchWord);
-    const newFilter = data.filter((value) => {
-      return value.title.toLowerCase().includes(searchWord.toLowerCase());
-    });
-
+    var newFilter;
+    if(City==1){
+      newFilter = data.filter((value) => {
+        return value.name.toLowerCase().includes(searchWord.toLowerCase()) ;
+      });
+    }
+    else{
+    newFilter = data.filter((value) => {
+      return value.name.toLowerCase().includes(searchWord.toLowerCase()) && value.city.toLowerCase().includes(City.toLowerCase());
+    });}
+    console.log(City, newFilter)
     if (searchWord === "") {
       setFilteredData([]);
     } else {
       setFilteredData(newFilter);
     }
+
   };
 
   return (
+    <>
     <div className="search">
       <div className="searchInputs">
         <input
@@ -44,6 +67,7 @@ function SearchBar({ placeholder, data }) {
         />
       </div>
       <FormControl className={classes.margin}> 
+      
       <div className="SelectCity">
         <NativeSelect
           defaultValue={1}
@@ -52,24 +76,29 @@ function SearchBar({ placeholder, data }) {
         >
           <option aria-label="None" value="" />
           <option value={1}> City</option>
-          <option value={2}>Delhi</option>
-          <option value={3}>Noida</option>
-          <option value={4}>Hyderabad</option>
+          <option value={"Delhi"}>Delhi</option>
+          <option value={"Noida"}>Noida</option>
+          <option value={"Hyderabbad"}>Hyderabad</option>
         </NativeSelect>
         </div>
+        
       </FormControl>
+      
+    </div>
+    <div className="dropdown">
       {filteredData.length != 0 && (
         <div className="dataResult">
           {filteredData.slice(0, 15).map((value, key) => {
             return (
               <a className="dataItem" href={value.link} target="_blank">
-                <p>{value.title} </p>
+                <p>{value.name} </p>
               </a>
             );
           })}
         </div>
       )}
-    </div>
+      </div>
+      </>
   );
 }
 
