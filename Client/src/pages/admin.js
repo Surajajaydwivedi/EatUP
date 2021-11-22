@@ -162,7 +162,7 @@ export default function App(props) {
   const { history } = props;
   React.useEffect(() => {
     async function op() {
-      if(localStorage.getItem("SESS").length!=32){
+      if(!localStorage.getItem("SESS") || localStorage.getItem("SESS").length!=32){
           updateView(false);
           window.open("http://localhost:3000/signin", "_self");
           return;
