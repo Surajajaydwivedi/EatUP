@@ -84,7 +84,7 @@ export default function SignIn() {
 
   React.useEffect(() => {
     async function op() {
-      if(localStorage.getItem("SESS").length!=32){
+      if(!localStorage.getItem("SESS") || localStorage.getItem("SESS").length!=32){
           return;
       }
       var x = await axios.post("http://localhost:5000/LoginCheck", {
