@@ -128,23 +128,28 @@ function App() {
       var x = await axios.post("http://localhost:5000/GetItemsForUser", {
         key: storeid,
       });
-      if(x.data.bool===true){
-      updatedata(x.data);
-    }
-      else{
-        window.open("http://localhost:3000/404","_self")
+      if (x.data.bool === true) {
+        updatedata(x.data);
+        
+        
+      } else {
+        window.open("http://localhost:3000/404", "_self");
       }
     }
     op();
+
+    
   }, []);
 
-  function cartbtn(inputt, name, price,itemkey) {
+
+
+  function cartbtn(inputt, name, price, itemkey) {
     if (inputt === true) {
       return (
         <IconButton
           aria-label="play/pause"
           onClick={() => {
-            add(name, price,itemkey);
+            add(name, price, itemkey);
           }}
         >
           <AddShoppingCartIcon className={classes.playIcon} />
@@ -155,6 +160,7 @@ function App() {
 
   function add(name, price, itemkey) {
     var itemlist = sessionStorage.getItem("food");
+    
     if (name === "" && price === 0) {
       if (itemlist == null) {
         return;
@@ -168,7 +174,7 @@ function App() {
       var temp = itemlist.split(",");
       var ind = temp.indexOf(name);
       if (ind === -1) {
-        itemlist = itemlist + name + "," + price+"/"+itemkey  + ",1,";
+        itemlist = itemlist + name + "," + price + "/" + itemkey + ",1,";
         sessionStorage.setItem("food", itemlist);
       } else {
         temp[ind + 2] = parseInt(temp[ind + 2]) + 1;
@@ -181,10 +187,12 @@ function App() {
   }
   window.addEventListener("load", () => add("", 0));
   if (document.getElementById("cartClose")) {
-    document.getElementById("cartClose").addEventListener("click", ()=>{add("", 0)});
+    document.getElementById("cartClose").addEventListener("click", () => {
+      add("", 0);
+    });
   }
   return (
-    <div >
+    <div>
       <AppBar position="static" className={classes.header}>
         <Toolbar>
           <IconButton
@@ -202,11 +210,17 @@ function App() {
             <Badge badgeContent={itemcount} color="secondary">
               <ShoppingCartIcon />
             </Badge>
-          </IconButton> 
+          </IconButton>
         </Toolbar>
       </AppBar>
-      {data&&  <Cart restname = {data.name} restaddress = {data.address} restcity = {data.city} restlogo = {data.logo} /> }
-     
+      {data && (
+        <Cart
+          restname={data.name}
+          restaddress={data.address}
+          restcity={data.city}
+          restlogo={data.logo}
+        />
+      )}
 
       {data &&
         data.items.map((dish) => (
@@ -230,7 +244,12 @@ function App() {
                     </Typography>
                   </CardContent>
                   <div className={classes.controls}>
-                    {cartbtn(dish.available, dish.name, dish.price,dish.Itemkey)}
+                    {cartbtn(
+                      dish.available,
+                      dish.name,
+                      dish.price,
+                      dish.Itemkey
+                    )}
                   </div>
                 </div>
               </Card>

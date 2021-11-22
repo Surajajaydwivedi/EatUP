@@ -51,6 +51,7 @@ import Paper from "@material-ui/core/Paper";
 import Box from "@material-ui/core/Box";
 import Invoice from "./invoice";
 import { func } from "prop-types";
+import io from "socket.io-client";
 const axios = require("axios");
 
 const QontoConnector = withStyles({
@@ -233,6 +234,7 @@ function App(props) {
   const [table, updateTable] = React.useState("");
   const [invoiceData, updateInvoiceData] = React.useState([0, 1, 2]);
   const [bool, updateBool] = React.useState(false);
+  const [socket, setSocket] = useState(null);
   var totalprice = 0;
   const storeid = props.storeid;
   var orderitmes = [];
@@ -244,9 +246,19 @@ function App(props) {
         key: storeid,
       });
       updatedata(x.data);
+      setSocket(io("http://localhost:5001"));
     }
     op();
+    return ()=>{
+      if(socket){
+      socket.disconnect()}
+    }
   }, []);
+
+  useEffect(()=>{
+    if(socket){
+    socket.emit("Join",storeid)}
+  },[socket])
 
   orderitmes = [];
   var temp = sessionStorage.getItem("food").split(",");
@@ -405,15 +417,20 @@ function App(props) {
       cost: totalprice,
       tableno: table,
     });
+    
   }
 
   const handleNext = () => {
+
     if (activeStep === 0) {
       if (allgood() === false) {
         return;
       }
     } else if (activeStep === 1) {
       sendorder();
+      if(socket){
+        socket.emit("NewOrder", storeid)
+    }
     }
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };

@@ -3,6 +3,8 @@ import Currorder from "../components/Admin/CurrentOrders/Admincurrorders";
 import Allorder from "../components/Admin/AllOrders/AdminAllOrders";
 import AdminMenu from "../components/Admin/MenuManager/Adminmenu";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import Snackbar from "@material-ui/core/Snackbar";
+
 import CropFreeIcon from "@material-ui/icons/CropFree";
 import HistoryIcon from "@material-ui/icons/History";
 import AlarmIcon from "@material-ui/icons/Alarm";
@@ -25,9 +27,12 @@ import clsx from "clsx";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-
+import SnackbarContent from "@material-ui/core/SnackbarContent";
+import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
+import MuiAlert from "@material-ui/lab/Alert";
+
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import ReceiptIcon from "@material-ui/icons/Receipt";
@@ -38,8 +43,11 @@ import Dashboard from "../components/Admin/AdminDashboard/AdminDashboard";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Qr from "../components/HelperComponents/qr";
+import io from "socket.io-client";
+
 const drawerWidth = 220;
 const axios = require("axios");
+
 const useStyles = makeStyles((theme) => ({
   container: {
     display: "flex",
@@ -104,12 +112,53 @@ const useStyles = makeStyles((theme) => ({
     }),
     marginLeft: 0,
   },
+  snack: {
+    maxWidth: 400,
+    "& > * + *": {
+      marginTop: theme.spacing(1),
+    },
+  },
 }));
+
+const action = (
+  <Button
+    href="activeorders"
+    style={{
+      backgroundColor: "#3FDE82",
+    }}
+    size="small"
+  >
+    Go to Orders
+  </Button>
+);
+
+function showNotification() {
+  var title = "You Have a New Order !";
+  var icon = "https://i.ibb.co/wg14TyM/YT-Fav-Icon.png";
+  var body = "👀👀";
+  var notification = new Notification(title, { body, icon });
+  notification.onclick = () => {
+    notification.close();
+    window.parent.focus();
+  };
+}
+
 export default function App(props) {
   const classes = useStyles();
   const theme = useTheme();
+
   const [open, setOpen] = React.useState(false);
   const [view, updateView] = React.useState(false);
+  const [socket, setSocket] = React.useState(null);
+  const [storeid, updateStoreid] = React.useState("");
+  const [openSnack, setopenSnack] = React.useState(false);
+
+  if (Notification.permission != "granted") {
+    Notification.requestPermission().then(function (permission) {
+      console.log(permission);
+    });
+  }
+
   const { history } = props;
   React.useEffect(() => {
     async function op() {
@@ -120,12 +169,24 @@ export default function App(props) {
         updateView(false);
         window.open("http://localhost:3000/signin", "_self");
       } else {
-        console.log(x.data.bool);
         updateView(true);
+        updateStoreid(x.data.key);
+        setSocket(io("http://localhost:5001"));
       }
     }
     op();
   }, []);
+
+  React.useEffect(() => {
+    if (socket) {
+      socket.emit("Join", storeid);
+
+      socket.on("Notify", () => {
+        setopenSnack(true);
+        showNotification();
+      });
+    }
+  }, [socket]);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -133,6 +194,10 @@ export default function App(props) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  function handleClose() {
+    setopenSnack(false);
+  }
 
   const itemsList = [
     {
@@ -269,10 +334,23 @@ export default function App(props) {
               <Route path="/admin/qr">
                 <Qr />
               </Route>
-              <Route path="*" >
-              <Dashboard />
+              <Route path="*">
+                <Dashboard />
               </Route>
             </Switch>
+            <div className={classes.snack}>
+              <Snackbar
+                open={openSnack}
+                autoHideDuration={6000}
+                onClose={handleClose}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+              >
+                <SnackbarContent
+                  message="New Order Received!"
+                  action={action}
+                />
+              </Snackbar>
+            </div>
             <Footer />
           </main>
         </div>

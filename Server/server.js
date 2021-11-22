@@ -22,11 +22,20 @@ app.use(
   })
 );
 
-const io = require("socket.io")(5001,{
+const io = require("socket.io")(5001, {
   cors: {
-    origin : "http://localhost:5000",
-    methods: ["GET","POST"],
-  }
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+  },
+});
+io.on("connection", (socket) => {
+  socket.on("Join", (roomid) => {
+    socket.join(roomid)
+  });
+  socket.on("NewOrder", (roomid) => {
+    io.to(roomid).emit("Notify","");
+  });
+
 });
 
 const mongoose = require("mongoose");
@@ -72,11 +81,14 @@ app.post("/check", async function (req, res) {
 
 app.post("/adminsignup", async function (req, res) {
   var obj = req.body;
+  console.log("Insert 1")
   returnedData = hp.insert(obj);
+  console.log("Insert 2")
   db.collection("Store Credentials").insertOne(returnedData[0]);
   db.collection("UserMenu").insertOne(returnedData[1]);
   db.collection("Admin").insertOne(returnedData[2]);
   db.collection("Items").insertOne(returnedData[3]);
+  db.collection("Orders").insertOne(returnedData[4]);
   res.json({
     bool: true,
   });
@@ -171,6 +183,7 @@ app.post("/LoginCheck", async function (req, res) {
   } else {
     res.json({
       bool: true,
+      key: sessdetails.key,
     });
   }
 });
@@ -374,15 +387,19 @@ app.post("/UpdateOrders", async function (req, res) {
   }
   var xx = await db.collection("Orders").findOne({ key: sessdetails.key });
   var orderlist = xx.Orders;
-  
+
   var inactiveorderlist = xx.inactiveOrders;
   for (let i = 0; i < orderlist.length; i++) {
     if (orderlist[i].orderno === obj.orderno) {
       if (obj.type === "Complete") {
         orderlist[i].completed = true;
       }
-      if(obj.type === "Cancel"){
-        Mailing.OrderCancelledMail(orderlist[i].email,[orderlist[i].items,orderlist[i].cost,orderlist[i].orderno])
+      if (obj.type === "Cancel") {
+        Mailing.OrderCancelledMail(orderlist[i].email, [
+          orderlist[i].items,
+          orderlist[i].cost,
+          orderlist[i].orderno,
+        ]);
       }
       orderlist[i].active = false;
       inactiveorderlist.push(orderlist[i]);
@@ -527,7 +544,6 @@ app.post("/verifyActivationCode", async function (req, res) {
 app.post("/getSearchData", async function (req, res) {
   var obj = req.body;
   /*  cursor = await db.collection("Admin").find({ image: "" }); */
-  
 
   db.collection("Admin")
     .find({ image: "" })
@@ -544,5 +560,4 @@ app.post("/getSearchData", async function (req, res) {
         data: ret,
       });
     });
-
 });

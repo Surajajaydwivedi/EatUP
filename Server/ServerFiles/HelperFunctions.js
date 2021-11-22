@@ -1,4 +1,5 @@
 function insert(data) {
+  console.log(data)
   var data1 = {
     key: data.key,
     name: data.name,
@@ -18,8 +19,8 @@ function insert(data) {
     phno: data.phno,
     address: data.address,
     city: data.city,
-    state: state,
-    pincode: pincode,
+    state: data.state,
+    pincode: data.pincode,
     logo: data.logo,
     image: data.image,
   };
@@ -27,8 +28,14 @@ function insert(data) {
     key: data.key,
     itmes: data.items,
   };
+  var data4 = {
+    key: data.key,
+    totalOrders: 0,
+    Orders : [],
+    inactiveOrders: [],
+  }
 
-  return [data2, data1, data3, dataitem];
+  return [data2, data1, data3, dataitem, data4];
 }
 
 function currtime() {
