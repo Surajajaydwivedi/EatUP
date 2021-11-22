@@ -147,7 +147,7 @@ function OrderRecieveMail(reciever, details) {
     tempDish = OrderRecieveDish;
   }
   tempOrderMain = tempOrderMain.replace("T0TAL", details[1].toString());
-  tempOrderMain = tempOrderMain.replace("1NV01CEL1NK", "http://localhost:3000/invoice/"+details[2].toString());
+  
   tempOrderMain = tempOrderMain.replace("D1SHES", "");
   SendMail(reciever, tempOrderMain, "Your Have a New Order !");
 }
@@ -167,6 +167,7 @@ function OrderCancelledMail(reciever, details) {
   tempOrderMain = tempOrderMain.replace("T0TAL", details[1].toString());
   tempOrderMain = tempOrderMain.replace("D1SHES", "");
   tempOrderMain = tempOrderMain.replace("######", details[2].toString());
+  tempOrderMain = tempOrderMain.replace("1NV01CEL1NK", "http://localhost:3000/invoice/"+details[3].toString());
   SendMail(reciever, tempOrderMain, "Sorry, Your Order has been Cancelled.");
 }
 

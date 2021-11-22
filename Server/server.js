@@ -404,6 +404,7 @@ app.post("/UpdateOrders", async function (req, res) {
           orderlist[i].items,
           orderlist[i].cost,
           orderlist[i].orderno,
+          orderlist[i].invoice+":"+obj.key,
         ]);
       }
       orderlist[i].active = false;

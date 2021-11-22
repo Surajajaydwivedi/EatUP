@@ -9,6 +9,7 @@ import CardActions from "@material-ui/core/CardActions";
 import Collapse from "@material-ui/core/Collapse";
 import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
+import GetAppIcon from '@material-ui/icons/GetApp';
 import { Container, Grid, TableHead } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import { red } from "@material-ui/core/colors";
@@ -70,6 +71,7 @@ function formatAMPM(date) {
 }
 
 export default function RecipeReviewCard(orderdetails) {
+  
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
   const [Time, updateTime] = React.useState("...");
@@ -201,11 +203,14 @@ export default function RecipeReviewCard(orderdetails) {
           </List>
         </CardContent>
         <CardActions disableSpacing>
-          <IconButton>
-            <DoneIcon onClick={handleComplete} />
+          <IconButton onClick={handleComplete}>
+            <DoneIcon  />
+          </IconButton>
+          <IconButton onClick={handleCancel}>
+            <ClearIcon  />
           </IconButton>
           <IconButton>
-            <ClearIcon onClick={handleCancel} />
+            <GetAppIcon />
           </IconButton>
           <IconButton
             className={clsx(classes.expand, {
