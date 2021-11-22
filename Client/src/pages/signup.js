@@ -280,7 +280,6 @@ export default function HorizontalLinearStepper() {
   }
 
   async function insertdata() {
-    console.log("INsert")
     var retval = await sendimgtoaws();
 
     var tempdata = {

@@ -9,7 +9,7 @@ import Menu from "./pages/menu";
 import Admin from "./pages/admin"
 import Error from "./pages/404.js"
 import HowItWorks from "./components/InfoSection/HowItWorks"
-import Invoice from "./components/HelperComponents/Invoice"
+import Invoice from "./components/HelperComponents/GetInvoice"
 
 const Frontend = () => {
   return (

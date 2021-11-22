@@ -6,8 +6,8 @@ var server = require("http").createServer(app);
 var formidable = require("formidable");
 var crypto = require("crypto");
 const hp = require("./ServerFiles/HelperFunctions");
-const Mailing = require("./ServerFiles/Mail");
-
+const Mailing = require("./ServerFiles/Mail"); 
+console.log(process.env.REACT_APP_AWS_SECRETKEY)
 server.listen(PORT, function () {
   var host = server.address().address;
   var port = server.address().port;
@@ -295,6 +295,7 @@ app.post("/adminItemEdit", async function (req, res) {
 app.post("/neworder", async function (req, res) {
   var obj = req.body;
   let mailDetails = [];
+  let InvoiceString = crypto.randomBytes(6).toString("hex");
   let Orderlist = await db.collection("Orders").findOne({ key: obj.key });
   if (Orderlist) {
     Updatedlist = Orderlist.Orders;
@@ -302,6 +303,7 @@ app.post("/neworder", async function (req, res) {
     Updatedlist.push({
       time: hp.formatAMPM(new Date()),
       date: hp.todaysdate(),
+      invoice: InvoiceString,
       orderno: Orderlist.totalOrders + 1,
       name: obj.name,
       email: obj.email,
@@ -325,6 +327,7 @@ app.post("/neworder", async function (req, res) {
     Orderlist.push({
       time: hp.formatAMPM(new Date()),
       date: hp.todaysdate(),
+      invoice: InvoiceString,
       orderno: 1,
       name: obj.name,
       email: obj.email,
@@ -351,8 +354,9 @@ app.post("/neworder", async function (req, res) {
   mailDetails.push(yy.city);
   mailDetails.push(yy.phno);
   mailDetails.push(obj.name);
+  mailDetails.push(InvoiceString+":"+obj.key);
   Mailing.OrderConfirmationMail(obj.email, mailDetails);
-  Mailing.OrderRecieveMail(yy.email, [obj.items, obj.cost]);
+  Mailing.OrderRecieveMail(yy.email, [obj.items, obj.cost, InvoiceString+":"+obj.key]);
 });
 
 app.post("/GetActiveOrders", async function (req, res) {
@@ -561,4 +565,36 @@ app.post("/getSearchData", async function (req, res) {
         data: ret,
       });
     });
+});
+
+
+app.post("/invoice", async function (req, res) {
+  var obj = req.body;
+  var invoiceString = obj.id;
+  var xx = await db.collection("Orders").findOne({ key: obj.key })
+  if(!xx){
+    res.json({
+      bool: false,
+    });
+    return;
+  }
+  let allOrders = [].concat(xx.Orders, xx.inactiveOrders);
+  for (let i = 0;i<allOrders.length;i++){
+    if(allOrders[i].invoice == invoiceString){
+      var yy = await db.collection("Admin").findOne({ key: obj.key })
+      res.json({
+        bool: true,
+        order: allOrders[i].items,
+        restname: yy.name,
+        restaddress: yy.address,
+        restcity : yy.city,
+        restlogo: yy.logo,
+      });
+      return;
+    }
+  }
+  res.json({
+    bool: false,
+  });
+    
 });

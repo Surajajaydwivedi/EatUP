@@ -10,6 +10,7 @@ function formatAMPM(date) {
   return strTime;
 }
 function createArray(arr) {
+  console.log(arr)
   var orderitmes = [];
   for (let i = 0; i < arr.length; i += 1) {
     var tt = {
@@ -23,7 +24,8 @@ function createArray(arr) {
   return orderitmes;
 }
 
-function downloadInvoice(input) {
+async function downloadInvoice(input) {
+
   var data = {
     //"documentTitle": "RECEIPT", //Defaults to INVOICE
     //"locale": "de-DE", //Defaults to en-US, used for number formatting (see docs)
@@ -33,8 +35,8 @@ function downloadInvoice(input) {
     marginRight: 25,
     marginLeft: 25,
     marginBottom: 25,
-    logo: "https://i.ibb.co/xFSVDrj/Yum-Trip-Logo.jpg", //or base64
-    //"background": "https://i.ibb.co/xFSVDrj/Yum-Trip-Logo.jpg"
+    logo: input[3], //or base64
+    background: "https://i.ibb.co/JFN00MX/Invoice-Template.png",
     sender: {
       company: "YumTrip",
       address: "Noida, UP",
@@ -56,9 +58,10 @@ function downloadInvoice(input) {
       "This is a computer generated Invoice and dosn't require any signature.",
   };
 
-  easyinvoice.createInvoice(data, function (result) {
+  await easyinvoice.createInvoice(data, function (result) {
     easyinvoice.download("invoice.pdf");
   });
+  return true;
 }
 
 export default downloadInvoice;

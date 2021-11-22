@@ -130,6 +130,7 @@ function OrderConfirmationMail(reciever, details) {
   tempOrderMain = tempOrderMain.replace("ADDRE55", details[3].toString());
   tempOrderMain = tempOrderMain.replace("P1N-C1TY", details[4].toString());
   tempOrderMain = tempOrderMain.replace("PHN0", details[5].toString());
+  tempOrderMain = tempOrderMain.replace("1NV01CEL1NK", "http://localhost:3000/invoice/"+details[7].toString());
   SendMail(reciever, tempOrderMain, "Your Order is Confirmed !");
 }
 
@@ -146,6 +147,7 @@ function OrderRecieveMail(reciever, details) {
     tempDish = OrderRecieveDish;
   }
   tempOrderMain = tempOrderMain.replace("T0TAL", details[1].toString());
+  tempOrderMain = tempOrderMain.replace("1NV01CEL1NK", "http://localhost:3000/invoice/"+details[2].toString());
   tempOrderMain = tempOrderMain.replace("D1SHES", "");
   SendMail(reciever, tempOrderMain, "Your Have a New Order !");
 }

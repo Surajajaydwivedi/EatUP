@@ -16,7 +16,7 @@ const styles = theme => ({
       marginBottom: '100px',
     },
     heading: {
-      fontSize: 200,
+      fontSize: 150,
       fontFamily: 'Lato, sans-serif',
     }
 });
@@ -26,11 +26,12 @@ function NotFound(props) {
   return ( 
     <div>
     <Header />
+    
     <Container maxWidth="md" className={classes.container}>
         <Typography
           align="center"
           color="textPrimary"
-          variant="h1"
+          variant="h6"
           className={classes.heading}
         >
           404
@@ -40,7 +41,8 @@ function NotFound(props) {
           color="textPrimary"
           variant="h5"
         >
-          The page you are looking for isn’t here try using the navigation.
+        {props.text ? props.text : "The page you are looking for isn’t here try using the navigation."}
+          
         </Typography>
     </Container>
     <Footer className={classes.footer}/> 
