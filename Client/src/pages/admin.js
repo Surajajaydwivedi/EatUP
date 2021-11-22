@@ -162,12 +162,18 @@ export default function App(props) {
   const { history } = props;
   React.useEffect(() => {
     async function op() {
+      if(localStorage.getItem("SESS").length!=32){
+          updateView(false);
+          window.open("http://localhost:3000/signin", "_self");
+          return;
+      }
       var x = await axios.post("http://localhost:5000/LoginCheck", {
         session: localStorage.getItem("SESS"),
       });
       if (x.data.bool === false) {
         updateView(false);
         window.open("http://localhost:3000/signin", "_self");
+        return ;
       } else {
         updateView(true);
         updateStoreid(x.data.key);

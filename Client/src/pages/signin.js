@@ -82,6 +82,24 @@ export default function SignIn() {
     UpdateEnteredEmail(x);
   }
 
+  React.useEffect(() => {
+    async function op() {
+      if(localStorage.getItem("SESS").length!=32){
+          return;
+      }
+      var x = await axios.post("http://localhost:5000/LoginCheck", {
+        session: localStorage.getItem("SESS"),
+      });
+      if (x.data.bool === false) {
+        return ;
+      } else {
+        window.open("http://localhost:3000/admin", "_self");
+      }
+    }
+    op();
+  }, []);
+
+
   async function validate() {
     var data = {
       email: enteredEmail,
