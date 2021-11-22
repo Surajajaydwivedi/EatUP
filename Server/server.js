@@ -201,6 +201,7 @@ app.post("/GetItemsForMenuManager", async function (req, res) {
   if (xx) {
     res.json({
       bool: true,
+      key: xx.key,
       name: "Pizza Hut",
       image: "images/123.png",
       logo: "images/123-logo.png",

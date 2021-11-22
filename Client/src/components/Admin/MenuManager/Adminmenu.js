@@ -12,10 +12,12 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import MenuIcon from "@material-ui/icons/Menu";
+import LaunchIcon from '@material-ui/icons/Launch';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import SearchIcon from "@material-ui/icons/Search";
 import AccountCircle from "@material-ui/icons/AccountCircle";
+
 import MailIcon from "@material-ui/icons/Mail";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import MoreIcon from "@material-ui/icons/MoreVert";
@@ -152,6 +154,9 @@ function App() {
                 </Typography>
               </CardContent>
               <div className={classes.controls}>
+              <IconButton color="secondary" aria-label="upload picture" component="span" onClick = {()=>{window.open("http://localhost:3000/store/"+data.key);}} >
+              <LaunchIcon />
+              </IconButton>
                 <ItemAddition />
               </div>
             </div>
