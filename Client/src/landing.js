@@ -9,6 +9,7 @@ import Menu from "./pages/menu";
 import Admin from "./pages/admin"
 import Error from "./pages/404.js"
 import HowItWorks from "./components/InfoSection/HowItWorks"
+import Invoice from "./components/HelperComponents/Invoice"
 
 const Frontend = () => {
   return (
@@ -20,6 +21,7 @@ const Frontend = () => {
         <Route path="/signup" component={SignupPage} exact />
         <Route path="/register" component={SignupPage} exact />
         <Route path="/howitworks" component={HowItWorks} />
+        <Route path="/invoice/" component={Invoice} />
         <Route path="/store/" component={Menu} />
         <Route path="/admin/" component={Admin} />
         <Route path="/404" component={Error} />
