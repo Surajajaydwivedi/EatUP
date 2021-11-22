@@ -47,7 +47,7 @@ export default function Orders(input) {
         </TableBody>
       </Table>
       <div className={classes.seeMore}>
-        <Link color="primary" href="#" >
+        <Link color="primary" href="allorders" >
           See more orders
         </Link>
       </div>
