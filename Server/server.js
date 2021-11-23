@@ -1,5 +1,5 @@
 const express = require("express");
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 const cors = require("cors");
 const app = express();
 var server = require("http").createServer(app);
@@ -7,7 +7,8 @@ var formidable = require("formidable");
 var crypto = require("crypto");
 const hp = require("./ServerFiles/HelperFunctions");
 const Mailing = require("./ServerFiles/Mail");
-console.log(process.env.REACT_APP_AWS_SECRETKEY);
+var server = require("http").createServer(app);
+
 server.listen(PORT, function () {
   var host = server.address().address;
   var port = server.address().port;
@@ -22,7 +23,7 @@ app.use(
   })
 );
 
-const io = require("socket.io")(5001, {
+const io = require("socket.io")(server, {
   cors: {
     origin: "http://localhost:3000",
     methods: ["GET", "POST"],
@@ -36,6 +37,16 @@ io.on("connection", (socket) => {
     io.to(roomid).emit("Notify", "");
   });
 });
+
+
+if ( process.env.NODE_ENV == "production"){
+  app.use(express.static("client/build"));
+  const path = require("path");
+  app.get("*", (req, res) => {
+      res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+  })
+}
+
 
 const mongoose = require("mongoose");
 const { SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS } = require("constants");
