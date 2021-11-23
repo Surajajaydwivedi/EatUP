@@ -74,7 +74,8 @@ export default function RecipeReviewCard() {
         session: localStorage.getItem("SESS"),
         type: "active",
       });
-      updatedata(x.data.items);
+      updatedata(x.data);
+      
       handleClose()
     }
     
@@ -90,7 +91,7 @@ export default function RecipeReviewCard() {
      <div>
       <Grid container spacing={3}>
         {data &&
-          data.map((order) => (
+          data.items.map((order) => (
             <Grid item xl={6}>
               <Orders
                 name={order.name}
@@ -104,6 +105,11 @@ export default function RecipeReviewCard() {
                 date = {order.date}
                 cost = {order.cost}
                 tableno = {order.tableno}
+                restname = { data.restname }
+                restaddress = { data.restaddress }
+                restcity=  {data.restcity}
+                restlogo =  {data.restlogo}
+    
               />
             </Grid>
           ))}

@@ -25,6 +25,7 @@ import ListItem from "@material-ui/core/ListItem";
 import Checkbox from "@material-ui/core/Checkbox";
 import DoneIcon from "@material-ui/icons/Done";
 import ClearIcon from "@material-ui/icons/Clear";
+import Invoice from "../../Menu/invoice"
 const axios = require("axios");
 
 const useStyles = makeStyles((theme) => ({
@@ -59,6 +60,9 @@ export default function RecipeReviewCard(orderdetails) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
 
+  function downloadInvoice(){
+    Invoice([orderdetails.restname, orderdetails.restaddress, orderdetails.restcity, orderdetails.restlogo, orderdetails.items])
+  }
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -132,7 +136,7 @@ export default function RecipeReviewCard(orderdetails) {
           </List>
         </CardContent>
         <CardActions disableSpacing>
-        <IconButton>
+        <IconButton onClick = {downloadInvoice}>
             <GetAppIcon />
           </IconButton>
           <IconButton

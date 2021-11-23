@@ -9,8 +9,8 @@ import CardActions from "@material-ui/core/CardActions";
 import Collapse from "@material-ui/core/Collapse";
 import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
-import Backdrop from '@material-ui/core/Backdrop';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import Backdrop from "@material-ui/core/Backdrop";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import { Container, Grid } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import { red } from "@material-ui/core/colors";
@@ -78,7 +78,7 @@ export default function RecipeReviewCard() {
         session: localStorage.getItem("SESS"),
         type: "All",
       });
-      updatedata(x.data.items);
+      updatedata(x.data);
       handleClose();
     }
     op();
@@ -86,13 +86,13 @@ export default function RecipeReviewCard() {
 
   return (
     <>
-    <Backdrop className={classes.backdrop} open={open} >
+      <Backdrop className={classes.backdrop} open={open}>
         <CircularProgress color="inherit" />
       </Backdrop>
       <Grid container spacing={3}>
         {data &&
-          data.map((order) =>
-            order.date !== todaysdate() || order.active=== false ? (
+          data.items.map((order) =>
+            order.date !== todaysdate() || order.active === false ? (
               <Grid item xl={6}>
                 <Orders
                   name={order.name}
@@ -103,16 +103,20 @@ export default function RecipeReviewCard() {
                   completed={order.completed}
                   time={order.time}
                   orderno={order.orderno}
-                  date = {order.date}
-                  cost = {order.cost}
-                  tableno = {order.tableno}
+                  date={order.date}
+                  cost={order.cost}
+                  tableno={order.tableno}
+                  restname={data.restname}
+                  restaddress={data.restaddress}
+                  restcity={data.restcity}
+                  restlogo={data.restlogo}
                 />
               </Grid>
             ) : (
               <></>
             )
           )}
-          {data && data.length === 0 ? (
+        {data && data.length === 0 ? (
           <Container maxWidth="sm" className={classes.menu}>
             <Typography component="h6" variant="h6">
               Looks like you do not have any active orders correctly.

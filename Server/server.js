@@ -6,8 +6,8 @@ var server = require("http").createServer(app);
 var formidable = require("formidable");
 var crypto = require("crypto");
 const hp = require("./ServerFiles/HelperFunctions");
-const Mailing = require("./ServerFiles/Mail"); 
-console.log(process.env.REACT_APP_AWS_SECRETKEY)
+const Mailing = require("./ServerFiles/Mail");
+console.log(process.env.REACT_APP_AWS_SECRETKEY);
 server.listen(PORT, function () {
   var host = server.address().address;
   var port = server.address().port;
@@ -30,12 +30,11 @@ const io = require("socket.io")(5001, {
 });
 io.on("connection", (socket) => {
   socket.on("Join", (roomid) => {
-    socket.join(roomid)
+    socket.join(roomid);
   });
   socket.on("NewOrder", (roomid) => {
-    io.to(roomid).emit("Notify","");
+    io.to(roomid).emit("Notify", "");
   });
-
 });
 
 const mongoose = require("mongoose");
@@ -81,9 +80,9 @@ app.post("/check", async function (req, res) {
 
 app.post("/adminsignup", async function (req, res) {
   var obj = req.body;
-  console.log("Insert 1")
+  console.log("Insert 1");
   returnedData = hp.insert(obj);
-  console.log("Insert 2")
+  console.log("Insert 2");
   db.collection("Store Credentials").insertOne(returnedData[0]);
   db.collection("UserMenu").insertOne(returnedData[1]);
   db.collection("Admin").insertOne(returnedData[2]);
@@ -354,9 +353,13 @@ app.post("/neworder", async function (req, res) {
   mailDetails.push(yy.city);
   mailDetails.push(yy.phno);
   mailDetails.push(obj.name);
-  mailDetails.push(InvoiceString+":"+obj.key);
+  mailDetails.push(InvoiceString + ":" + obj.key);
   Mailing.OrderConfirmationMail(obj.email, mailDetails);
-  Mailing.OrderRecieveMail(yy.email, [obj.items, obj.cost, InvoiceString+":"+obj.key]);
+  Mailing.OrderRecieveMail(yy.email, [
+    obj.items,
+    obj.cost,
+    InvoiceString + ":" + obj.key,
+  ]);
 });
 
 app.post("/GetActiveOrders", async function (req, res) {
@@ -369,14 +372,23 @@ app.post("/GetActiveOrders", async function (req, res) {
     return;
   }
   var xx = await db.collection("Orders").findOne({ key: sessdetails.key });
+  var yy = await db.collection("Admin").findOne({ key: sessdetails.key });
   if (obj.type == "All") {
     res.json({
+      restname: yy.name,
+      restaddress: yy.address,
+      restcity: yy.city,
+      restlogo: yy.logo,
       items: [].concat(xx.Orders, xx.inactiveOrders),
     });
     return;
   }
   res.json({
     items: xx.Orders,
+    restname: yy.name,
+    restaddress: yy.address,
+    restcity: yy.city,
+    restlogo: yy.logo,
   });
   updateSessionTime(obj.session);
 });
@@ -404,7 +416,7 @@ app.post("/UpdateOrders", async function (req, res) {
           orderlist[i].items,
           orderlist[i].cost,
           orderlist[i].orderno,
-          orderlist[i].invoice+":"+obj.key,
+          orderlist[i].invoice + ":" + obj.key,
         ]);
       }
       orderlist[i].active = false;
@@ -568,27 +580,26 @@ app.post("/getSearchData", async function (req, res) {
     });
 });
 
-
 app.post("/invoice", async function (req, res) {
   var obj = req.body;
   var invoiceString = obj.id;
-  var xx = await db.collection("Orders").findOne({ key: obj.key })
-  if(!xx){
+  var xx = await db.collection("Orders").findOne({ key: obj.key });
+  if (!xx) {
     res.json({
       bool: false,
     });
     return;
   }
   let allOrders = [].concat(xx.Orders, xx.inactiveOrders);
-  for (let i = 0;i<allOrders.length;i++){
-    if(allOrders[i].invoice == invoiceString){
-      var yy = await db.collection("Admin").findOne({ key: obj.key })
+  for (let i = 0; i < allOrders.length; i++) {
+    if (allOrders[i].invoice == invoiceString) {
+      var yy = await db.collection("Admin").findOne({ key: obj.key });
       res.json({
         bool: true,
         order: allOrders[i].items,
         restname: yy.name,
         restaddress: yy.address,
-        restcity : yy.city,
+        restcity: yy.city,
         restlogo: yy.logo,
       });
       return;
@@ -597,5 +608,4 @@ app.post("/invoice", async function (req, res) {
   res.json({
     bool: false,
   });
-    
 });

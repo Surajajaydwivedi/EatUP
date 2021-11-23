@@ -25,6 +25,7 @@ import ListItem from "@material-ui/core/ListItem";
 import Checkbox from "@material-ui/core/Checkbox";
 import DoneIcon from "@material-ui/icons/Done";
 import ClearIcon from "@material-ui/icons/Clear";
+import Invoice from "../../Menu/invoice"
 const axios = require("axios");
 
 const useStyles = makeStyles((theme) => ({
@@ -71,11 +72,14 @@ function formatAMPM(date) {
 }
 
 export default function RecipeReviewCard(orderdetails) {
-  
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
   const [Time, updateTime] = React.useState("...");
   const [timeColor, updateTimeColor] = React.useState("");
+
+  function downloadInvoice(){
+    Invoice([orderdetails.restname, orderdetails.restaddress, orderdetails.restcity, orderdetails.restlogo, orderdetails.items])
+  }
 
   function timeupdater() {
     var StartTime = orderdetails.time;
@@ -209,7 +213,7 @@ export default function RecipeReviewCard(orderdetails) {
           <IconButton onClick={handleCancel}>
             <ClearIcon  />
           </IconButton>
-          <IconButton>
+          <IconButton onClick={downloadInvoice}>
             <GetAppIcon />
           </IconButton>
           <IconButton

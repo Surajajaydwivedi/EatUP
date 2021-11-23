@@ -10,7 +10,6 @@ function formatAMPM(date) {
   return strTime;
 }
 function createArray(arr) {
-  console.log(arr)
   var orderitmes = [];
   for (let i = 0; i < arr.length; i += 1) {
     var tt = {
@@ -25,7 +24,7 @@ function createArray(arr) {
 }
 
 async function downloadInvoice(input) {
-
+  console.log(input)
   var data = {
     //"documentTitle": "RECEIPT", //Defaults to INVOICE
     //"locale": "de-DE", //Defaults to en-US, used for number formatting (see docs)
